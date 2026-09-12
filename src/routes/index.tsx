@@ -132,7 +132,7 @@ function Index() {
         <section className="hero shell">
           <div className="eyebrow">Accepting design partners for Q4 2026</div>
           <h1>Your API providers change things without telling you.</h1>
-          <p className="hero-copy">pikopod watches both sides — the specs they publish and the bytes they actually send — and tells you the moment either stops matching what you built against. Before your customers find out.</p>
+          <p className="hero-copy">pikopod gives you a deterministic sandbox built from your provider's spec, failure scenarios that bind themselves to your API, and a drift agent that catches the changes your provider never announced. One Go binary, running locally.</p>
           <p className="mono-note">One Go binary. Runs locally. Nothing leaves your machine.</p>
           <Terminal label="Example pikopod drift report"><><span className="err">[ERR]</span> pikopod drift — new value on GET /transaction/tx_{"{id}"} (examplepay){"\n"}<span className="field">status:</span> value "succeeded" not in known set [success]{"\n"}<span className="field">fingerprint</span> fp_385153d1776c · <span className="field">first seen</span> 2026-09-11T00:08:54Z · 3 occurrence(s){"\n"}<span className="field">replay it:</span> pikopod scenario from-drift fp_385153d1776c</></Terminal>
           <p className="terminal-caption">One letter. Your <code>if status == "success"</code> stops matching and payments start looking unsettled. Nobody's changelog mentioned it.</p>
