@@ -132,7 +132,7 @@ function Index() {
         <section className="hero shell">
           <div className="eyebrow">Accepting design partners for Q4 2026</div>
           <h1>Your API providers change things without telling you.</h1>
-          <p className="hero-copy">pikopod watches both sides — the specs they publish and the bytes they actually send — and tells you the moment either stops matching what you built against. Before your customers find out.</p>
+          <p className="hero-copy">pikopod gives you a deterministic sandbox built from your provider's spec, failure scenarios that bind themselves to your API, and a drift agent that catches the changes your provider never announced. One Go binary, running locally.</p>
           <p className="mono-note">One Go binary. Runs locally. Nothing leaves your machine.</p>
           <Terminal label="Example pikopod drift report"><><span className="err">[ERR]</span> pikopod drift — new value on GET /transaction/tx_{"{id}"} (examplepay){"\n"}<span className="field">status:</span> value "succeeded" not in known set [success]{"\n"}<span className="field">fingerprint</span> fp_385153d1776c · <span className="field">first seen</span> 2026-09-11T00:08:54Z · 3 occurrence(s){"\n"}<span className="field">replay it:</span> pikopod scenario from-drift fp_385153d1776c</></Terminal>
           <p className="terminal-caption">One letter. Your <code>if status == "success"</code> stops matching and payments start looking unsettled. Nobody's changelog mentioned it.</p>
@@ -154,8 +154,73 @@ function Index() {
           </div>
         </section>
 
+        <section className="section shell" id="tenses">
+          <div className="section-heading"><span className="index">03 / FRAMING</span><h2>Three tenses of one question</h2><p>Everything pikopod does answers one question — <em>what is this API about to do to me?</em> — asked about three different times.</p></div>
+          <div className="tense-grid">
+            <div />
+            <div className="tense-head">Sandbox</div>
+            <div className="tense-head">Drift agent</div>
+            <div className="tense-head">Replay</div>
+
+            <div className="tense-key">Tense</div>
+            <div><p>Future</p></div>
+            <div><p>Present</p></div>
+            <div><p>Past</p></div>
+
+            <div className="tense-key">Answers</div>
+            <div><p>What happens when they ship the new spec? When they decline, or time out?</p></div>
+            <div><p>Did it actually happen, and is it on my wire now?</p></div>
+            <div><p>What exactly happened — prove the fix against it.</p></div>
+
+            <div className="tense-key">Needs</div>
+            <div><p>A spec. Works on day one.</p></div>
+            <div><p>48 hours of traffic.</p></div>
+            <div><p>It to have already broken.</p></div>
+          </div>
+          <p className="after-note">Each covers what the others structurally cannot.</p>
+        </section>
+
+        <section className="section shell" id="sandbox">
+          <div className="section-heading"><span className="index">04 / SANDBOX</span><h2>A sandbox that behaves like your provider</h2><p>Point your staging environment at pikopod instead of the provider's own sandbox. It is built from their spec, and it is deterministic — same seed, same bytes, every run. Unlike the provider's sandbox, you can make it misbehave on purpose.</p></div>
+          <Terminal label="Example sandbox import and serve"><><span className="prompt">$</span> pikopod import examplepay --spec https://api.examplepay.com/openapi.json{"\n"}<span className="prompt">$</span> pikopod up{"\n\n"}sandbox examplepay registered (sbx_dd9b07b7e373574d, 53 endpoints){"\n"}serve it with `pikopod up` → http://127.0.0.1:4600/examplepay/...</></Terminal>
+          <div className="sub-block">
+            <h3>Make it fail on demand</h3>
+            <Terminal label="Example chaos fault injection"><><span className="prompt">$</span> pikopod chaos examplepay --kind error --status 503 --method POST --path /v1/charges{"\n\n"}armed: {"{"}"method":"POST","path":"/v1/charges","kind":"error","status":503,"probability":1{"}"}</></Terminal>
+            <p className="mono-note">Fault kinds are <code>error</code>, <code>latency</code>, <code>hang</code>, <code>slow_body</code> and <code>rate_limit</code>. The provider's own sandbox will not do any of these for you.</p>
+          </div>
+        </section>
+
+        <section className="section section-emphasis" id="scenarios"><div className="shell">
+          <div className="section-heading"><span className="index">05 / SCENARIOS</span><h2>Failure scenarios that bind to your API</h2><p>pikopod ships eleven provider-agnostic failure stories — declines, timeouts, duplicate delivery, rate-limit backoff, partial failure, downtime recovery and more. You do not write them. They bind themselves to your API from its spec, and tell you which ones your integration can actually support.</p></div>
+          <Terminal label="Example scenario archetype listing"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n\n"}archetypes vs examplepay (53 endpoints):{"\n"}  <span className="ok">✓</span> happy_path                 Happy path  (15 candidate binding(s)){"\n"}  <span className="ok">✓</span> unauthorized               Unauthorized  (25 candidate binding(s)){"\n"}  <span className="warn">✗</span> invalid_request            Invalid request{"\n"}      <span className="dim">no operation matching {"{"}"crud":"CREATE","hasErrorResponseClass":"4XX"{"}"} for role 'op'</span>{"\n"}  <span className="ok">✓</span> rate_limit_backoff         Rate limit and backoff  (25 candidate binding(s)){"\n"}  <span className="warn">✗</span> duplicate_delivery         Duplicate delivery{"\n"}      <span className="dim">no webhookEvent matching {"{}"} for role 'emittedEvent'</span>{"\n"}  <span className="ok">✓</span> retry_storm                Retry storm with recovery  (7 candidate binding(s)){"\n"}  <span className="ok">✓</span> declines                   Declines  (7 candidate binding(s)){"\n"}  <span className="ok">✓</span> timeouts                   Timeouts  (15 candidate binding(s))</></Terminal>
+          <p className="callout"><strong>A refusal is an answer.</strong> When an archetype cannot bind, pikopod says which role it could not fill and why. It will not bind on a guess, because a test resting on a guess fails for reasons that have nothing to do with your code.</p>
+          <div className="sub-block">
+            <Terminal label="Example scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines timeouts partial_failure</></Terminal>
+          </div>
+        </div></section>
+
+        <section className="section shell" id="describe">
+          <div className="section-heading"><span className="index">06 / GROUNDED GENERATION</span><h2>Describe a failure in English</h2><p>Bring your own model key and describe the scenario you want. The model never writes test steps — it picks from the archetypes that actually bind to your API and fills in operations that actually exist. It cannot invent an endpoint.</p></div>
+          <Terminal label="Example scenario creation from a description"><><span className="prompt">$</span> pikopod scenario create examplepay "a timeout after the charge succeeds"{"\n\n"}grounding "a timeout after the charge succeeds" against examplepay{"\n"}  (53 operations, 8 applicable archetypes)…</></Terminal>
+          <p className="callout"><strong>The model is fenced, not trusted.</strong> It emits a constrained intent, validated against a closed inventory built from your imported spec. Anything outside that inventory is a typed refusal rather than a broken test. It must also declare what your description asked for that it could not capture.</p>
+          <p className="mono-note">Optional. Everything else on this page works with no model key at all.</p>
+        </section>
+
+        <section className="section shell" id="replay">
+          <div className="section-heading"><span className="index">07 / REPLAY</span><h2>Replay your own production traffic</h2><p>The drift agent records the traffic it observes — redacted before it touches disk. Those recordings become fixtures: the sandbox serves them for requests the spec cannot answer, and CI replays them offline to gate a build.</p></div>
+          <Terminal label="Example offline replay in CI"><><span className="prompt">$</span> pikopod replay --ci</></Terminal>
+          <p className="mono-note">Exit <code>0</code> clean, <code>1</code> drift found, <code>2</code> tool error. No network, no provider, no staging environment.</p>
+          <div className="tier-list">
+            <article><h3>exact</h3><p>Method, path and a normalised body hash.</p></article>
+            <article><h3>shape</h3><p>Method, path template and the body's field set, values ignored.</p></article>
+            <article><h3>sequence</h3><p>The next unserved recording for that method and template.</p></article>
+          </div>
+          <p className="after-note">Every response names the tier it was served from, so a degraded match is visible rather than silent.</p>
+        </section>
+
         <section className="section shell" id="safety">
-          <div className="section-heading"><span className="index">03 / FAILURE MODE</span><h2>Safe in front of money</h2></div>
+          <div className="section-heading"><span className="index">08 / FAILURE MODE</span><h2>Safe in front of money</h2></div>
+
           <div className="safety-list">
             <article><span>01</span><div><h3>It serves first and observes afterwards.</h3><p>Observation is asynchronous and bounded; every capture stage is isolated and counted. If pikopod breaks internally, your traffic still flows.</p></div></article>
             <article><span>02</span><div><h3>It never retries.</h3><p>An automatic retry in front of a payments API is a double-charge window.</p></div></article>
@@ -165,7 +230,7 @@ function Index() {
         </section>
 
         <section className="partner-section" id="apply"><div className="shell partner-grid">
-          <div className="partner-copy"><span className="index">04 / DESIGN PARTNERS</span><h2>Accepting design partners for Q4 2026</h2><p>pikopod is open source and works today. We're looking for a small number of teams who depend on third-party APIs in production and are willing to run it against a real provider while we build the hosted layer.</p>
+          <div className="partner-copy"><span className="index">09 / DESIGN PARTNERS</span><h2>Accepting design partners for Q4 2026</h2><p>pikopod is open source and works today. We're looking for a small number of teams who depend on third-party APIs in production and are willing to run it against a real provider while we build the hosted layer.</p>
             <div className="terms"><div><h3>What you get</h3><p>Direct line to the maintainer. Your provider's quirks shape what gets built. Free access to the hosted layer through the program and preferential pricing after.</p></div><div><h3>What we ask</h3><p>Run pikopod against at least one provider you actually depend on. A short call every two weeks. Tell us when it's wrong.</p></div></div>
           </div><ApplicationForm />
         </div></section>
