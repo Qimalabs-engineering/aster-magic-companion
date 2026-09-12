@@ -230,7 +230,7 @@ function Index() {
         </section>
 
         <section className="partner-section" id="apply"><div className="shell partner-grid">
-          <div className="partner-copy"><span className="index">04 / DESIGN PARTNERS</span><h2>Accepting design partners for Q4 2026</h2><p>pikopod is open source and works today. We're looking for a small number of teams who depend on third-party APIs in production and are willing to run it against a real provider while we build the hosted layer.</p>
+          <div className="partner-copy"><span className="index">09 / DESIGN PARTNERS</span><h2>Accepting design partners for Q4 2026</h2><p>pikopod is open source and works today. We're looking for a small number of teams who depend on third-party APIs in production and are willing to run it against a real provider while we build the hosted layer.</p>
             <div className="terms"><div><h3>What you get</h3><p>Direct line to the maintainer. Your provider's quirks shape what gets built. Free access to the hosted layer through the program and preferential pricing after.</p></div><div><h3>What we ask</h3><p>Run pikopod against at least one provider you actually depend on. A short call every two weeks. Tell us when it's wrong.</p></div></div>
           </div><ApplicationForm />
         </div></section>
