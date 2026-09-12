@@ -111,6 +111,23 @@
 .partner-section { border-top: 1px solid var(--border); background: var(--card); padding-block: 110px; }.partner-grid { display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(50px, 8vw, 110px); }.terms { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 55px; border-top: 1px solid var(--border); padding-top: 25px; }.terms h3 { margin-bottom: 10px; font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; }.terms p { color: var(--muted-foreground); font-size: .91rem; line-height: 1.6; }
 .application-form { border: 1px solid var(--border); background: var(--background); padding: 30px; }.application-form label { display: grid; gap: 9px; margin-bottom: 20px; font-family: var(--font-mono); font-size: .72rem; }.application-form input,.application-form textarea { width: 100%; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); padding: 12px; color: var(--foreground); font-family: var(--font-sans); font-size: .9rem; outline: none; }.application-form input:focus,.application-form textarea:focus { border-color: var(--info); box-shadow: 0 0 0 2px color-mix(in oklab, var(--info) 18%, transparent); }.form-row,.error-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }.error-row { margin-top: -16px; }.field-error { margin: -12px 0 18px; color: var(--err); font-family: var(--font-mono); font-size: .68rem; }.success-panel { min-height: 320px; border: 1px solid var(--border); background: var(--background); padding: 34px; display: flex; flex-direction: column; justify-content: center; }.success-panel .label { color: var(--info); }.success-panel p { max-width: 390px; margin-top: 18px; font-size: 1.5rem; line-height: 1.4; }
 footer { border-top: 1px solid var(--border); padding-block: 60px; }.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }.footer-grid p { margin-top: 15px; color: var(--muted-foreground); font-size: .82rem; }.footer-grid h3 { margin-bottom: 14px; font-family: var(--font-mono); font-size: .68rem; color: var(--subtle); text-transform: uppercase; }.footer-grid div:not(:first-child) { display: flex; flex-direction: column; gap: 10px; }.footer-grid div:not(:first-child) a { font-size: .82rem; color: var(--muted-foreground); }.footer-grid a:hover { color: var(--foreground); }
+.ok { color: oklch(0.74 0.12 158); }.warn { color: var(--warn); }.dim { color: oklch(0.62 0.02 228); }
+.tense-grid { display: grid; grid-template-columns: 150px repeat(3, 1fr); border: 1px solid var(--border); border-bottom: 0; }
+.tense-grid > div { border-bottom: 1px solid var(--border); padding: 20px 24px; }
+.tense-grid > div:not(:nth-child(4n+1)) { border-left: 1px solid var(--border); }
+.tense-head { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--info); }
+.tense-key { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--subtle); }
+.tense-grid p { color: var(--muted-foreground); font-size: .93rem; line-height: 1.6; }
+.after-note { margin-top: 22px; color: var(--muted-foreground); }
+.sub-block { margin-top: 46px; }.sub-block h3 { font-size: 1.12rem; font-weight: 600; }
+.callout { margin-top: 30px; border: 1px solid var(--border); border-left: 2px solid var(--info); padding: 22px 26px; color: var(--muted-foreground); line-height: 1.65; max-width: 860px; }
+.callout strong { color: var(--foreground); font-weight: 600; }
+.tier-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 34px; border: 1px solid var(--border); }
+.tier-list article { padding: 24px; }.tier-list article + article { border-left: 1px solid var(--border); }
+.tier-list h3 { font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; color: var(--info); margin-bottom: 10px; }
+.tier-list p { color: var(--muted-foreground); font-size: .92rem; line-height: 1.6; }
+.section-emphasis { background: var(--card); }
+
 
 @media (max-width: 760px) {
   .site-header { min-height: 56px; }.site-header nav { gap: 5px; }.site-header nav > a:not(.nav-cta) { display: none; }.nav-cta { padding-inline: 10px; font-size: .65rem; }
