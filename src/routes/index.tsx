@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -32,10 +32,29 @@ type FieldErrors = Partial<Record<keyof FormFields | "form", string>>;
 const github = "https://github.com/pikopod/pikopod";
 
 function Terminal({ children, label }: { children: React.ReactNode; label: string }) {
+  const terminalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const terminal = terminalRef.current;
+    if (!terminal || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        terminal.classList.add("terminal-active");
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(terminal);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="terminal" aria-label={label}>
-      <div className="terminal-bar"><span className="terminal-mark" />pikopod<span className="ml-auto text-subtle">~/api</span></div>
-      <pre><code>{children}</code></pre>
+    <div className="terminal" aria-label={label} ref={terminalRef}>
+      <div className="terminal-bar"><span className="terminal-mark" /><span className="terminal-title">pikopod</span><span className="terminal-activity" aria-hidden="true" /><span className="ml-auto text-subtle">~/api</span></div>
+      <pre><code>{children}</code><span className="terminal-caret" aria-hidden="true" /></pre>
     </div>
   );
 }
