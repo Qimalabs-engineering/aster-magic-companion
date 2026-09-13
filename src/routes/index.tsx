@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { Children, cloneElement, FormEvent, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -31,30 +31,82 @@ type FieldErrors = Partial<Record<keyof FormFields | "form", string>>;
 
 const github = "https://github.com/pikopod/pikopod";
 
+function nodeText(node: ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(nodeText).join("");
+  if (isValidElement<{ children?: ReactNode }>(node)) return nodeText(node.props.children);
+  return "";
+}
+
+function afterFirstLine(node: ReactNode, remaining: { count: number }): ReactNode {
+  if (typeof node === "string" || typeof node === "number") {
+    const text = String(node);
+    if (remaining.count >= text.length) {
+      remaining.count -= text.length;
+      return null;
+    }
+    const result = text.slice(remaining.count);
+    remaining.count = 0;
+    return result;
+  }
+  if (Array.isArray(node)) return node.map((child) => afterFirstLine(child, remaining));
+  if (isValidElement<{ children?: ReactNode }>(node)) {
+    const nextChildren = Children.map(node.props.children, (child) => afterFirstLine(child, remaining));
+    return cloneElement(node, undefined, nextChildren);
+  }
+  return node;
+}
+
 function Terminal({ children, label }: { children: React.ReactNode; label: string }) {
   const terminalRef = useRef<HTMLDivElement>(null);
+  const fullText = nodeText(children);
+  const firstBreak = fullText.indexOf("\n");
+  const command = firstBreak === -1 ? fullText : fullText.slice(0, firstBreak);
+  const result = firstBreak === -1 ? null : afterFirstLine(children, { count: firstBreak + 1 });
+  const [typedLength, setTypedLength] = useState(command.length);
+  const [showResult, setShowResult] = useState(true);
 
   useEffect(() => {
     const terminal = terminalRef.current;
     if (!terminal || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    let typingTimer: number | undefined;
+    let resultTimer: number | undefined;
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
         terminal.classList.add("terminal-active");
+        setTypedLength(0);
+        setShowResult(false);
+        let index = 0;
+        const speed = Math.max(12, Math.min(34, 1050 / Math.max(command.length, 1)));
+        typingTimer = window.setInterval(() => {
+          index += 1;
+          setTypedLength(Math.min(index, command.length));
+          if (index < command.length) return;
+          window.clearInterval(typingTimer);
+          resultTimer = window.setTimeout(() => setShowResult(true), 260);
+        }, speed);
         observer.disconnect();
       },
       { threshold: 0.35 },
     );
 
     observer.observe(terminal);
-    return () => observer.disconnect();
-  }, []);
+    return () => {
+      observer.disconnect();
+      if (typingTimer) window.clearInterval(typingTimer);
+      if (resultTimer) window.clearTimeout(resultTimer);
+    };
+  }, [command]);
 
   return (
     <div className="terminal" aria-label={label} ref={terminalRef}>
       <div className="terminal-bar"><span className="terminal-mark" /><span className="terminal-title">pikopod</span><span className="terminal-activity" aria-hidden="true" /><span className="ml-auto text-subtle">~/api</span></div>
-      <pre><code>{children}</code><span className="terminal-caret" aria-hidden="true" /></pre>
+      <pre className="terminal-content">
+        <code className="terminal-measure" aria-hidden="true">{children}</code>
+        <code className="terminal-live"><span className="terminal-command">{command.slice(0, typedLength)}</span>{typedLength < command.length && <span className="terminal-caret" aria-hidden="true" />}{showResult && result && <span className="terminal-result">{"\n"}{result}</span>}</code>
+      </pre>
     </div>
   );
 }
