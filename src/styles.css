@@ -109,7 +109,7 @@
 .terminal-active .terminal-title { color: oklch(0.86 0.015 225); }
 .terminal-active .terminal-activity { animation: terminal-signal 1.8s cubic-bezier(.16, 1, .3, 1) .15s both; }
 .terminal-active .terminal-caret { animation: terminal-caret-in .01s 1.05s forwards, terminal-caret-blink 1.15s steps(1, end) 1.05s 4; }
-@keyframes terminal-output-in { from { opacity: 0; transform: translateY(5px); clip-path: inset(0 0 100% 0); } 35% { opacity: 1; } to { opacity: 1; transform: translateY(0); clip-path: inset(0); } }
+@keyframes terminal-output-in { from { opacity: 0; transform: translateY(5px); } 35% { opacity: 1; } to { opacity: 1; transform: translateY(0); } }
 @keyframes terminal-signal { 0% { opacity: .45; background: var(--subtle); } 25%, 72% { opacity: 1; background: var(--info); } 100% { opacity: .55; background: var(--subtle); } }
 @keyframes terminal-caret-in { to { opacity: 1; } }
 @keyframes terminal-caret-blink { 0%, 48% { opacity: .8; } 49%, 100% { opacity: 0; } }
