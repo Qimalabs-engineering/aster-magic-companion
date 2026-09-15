@@ -234,7 +234,7 @@ function Index() {
             <p>If the spec does not contain enough evidence, it refuses the binding and names the missing fact instead of inventing a test.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="List failure scenarios available for an API"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}<span className="ok">✓</span> declines             1 binding{"\n"}<span className="ok">✓</span> timeouts             1 binding{"\n"}<span className="ok">✓</span> retry_storm          1 binding{"\n"}<span className="warn">✗</span> duplicate_delivery{"\n"}    <span className="dim">no webhook event for role 'emittedEvent'</span></Terminal>
+            <Terminal label="List failure scenarios available for an API"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}<span className="ok">✓</span> declines             1 binding{"\n"}<span className="ok">✓</span> timeouts             1 binding{"\n"}<span className="ok">✓</span> retry_storm          1 binding{"\n"}<span className="warn">✗</span> duplicate_delivery{"\n"}    <span className="dim">no webhook event for role 'emittedEvent'</span></></Terminal>
           </div>
         </div></section>
 
