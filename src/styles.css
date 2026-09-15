@@ -231,7 +231,7 @@ footer { border-top: 1px solid var(--border); padding-block: 60px; }.footer-grid
 .story-hero-copy { align-self: center; }
 
 .chapter-label { display: inline-flex; align-items: center; gap: 8px; color: var(--info); font-family: var(--font-mono); font-size: .64rem; text-transform: uppercase; }
-.story-hero h1 { max-width: 640px; margin: 22px 0 20px; font-family: var(--font-mono); font-size: clamp(2.05rem, 3.3vw, 2.7rem); font-weight: 400; line-height: 1.14; }
+.story-hero h1 { max-width: 660px; margin: 22px 0 20px; font-family: var(--font-mono); font-size: clamp(1.85rem, 2.95vw, 2.45rem); font-weight: 400; line-height: 1.16; }
 .story-hero-copy > p:not(.chapter-label) { max-width: 550px; color: var(--muted-foreground); font-size: 1.02rem; line-height: 1.72; }
 .story-hero-proof { min-width: 0; align-self: start; margin-top: 38px; }
 .story-hero-proof .terminal { margin-top: 0; }
