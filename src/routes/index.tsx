@@ -194,132 +194,117 @@ function Index() {
       <header className="site-header">
         <a className="wordmark" href="#top">pikopod<span className="cursor-mark">_</span></a>
         <nav aria-label="Primary navigation">
-          <a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><ThemeToggle />
-          <a className="nav-cta" href="#apply">Apply as a design partner</a>
+          <a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href={github}>GitHub</a><ThemeToggle />
+          <a className="nav-cta" href="#apply">Apply</a>
         </nav>
       </header>
 
       <main id="top">
-        <section className="hero shell">
-          <div className="hero-grid">
-            <div className="hero-intro">
-              <div className="eyebrow"><span className="status-dot" />Accepting design partners for Q4 2026</div>
-              <h1>Their sandbox only knows <span>how to succeed.</span></h1>
-              <p className="hero-copy">It has never declined a charge in a way you didn't ask for, never timed out halfway through, never delivered the same webhook twice. So the first time your retry path runs for real, it runs against real money.</p>
-              <p className="hero-copy">pikopod builds a sandbox from your provider's own spec, makes it fail on purpose, and — when something goes wrong in production anyway — replays that exact failure back into it.</p>
-              <div className="actions"><a className="button-link primary-link" href="#apply">Apply as a design partner</a><a className="button-link outline-link" href={github}>View on GitHub</a></div>
-            </div>
-            <div className="hero-evidence">
-              <Terminal label="Example scenario listing and run"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}archetypes vs examplepay (4 endpoints):{"\n"}  <span className="ok">✓</span> declines                   Declines  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> timeouts                   Timeouts  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> retry_storm                Retry storm with recovery  (1 candidate binding(s)){"\n"}  <span className="warn">✗</span> duplicate_delivery         Duplicate delivery{"\n"}      <span className="dim">no webhookEvent matching {"{}"} for role 'emittedEvent'</span>{"\n\n"}<span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    PASSED         declined         POST /charges → 400{"\n"}    PASSED         recovered        POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    PASSED         attempt1         POST /charges → 503{"\n"}    PASSED         attempt2         POST /charges → 503{"\n"}    PASSED         attempt3         POST /charges → 201</></Terminal>
-              <p className="terminal-caption">No proxy, no account, nothing in your request path — and nothing to author. The failure stories bind themselves to your API from its spec, and the one that cannot bind says which fact was missing rather than guessing a test into existence.</p>
-            </div>
+        <section className="story-hero shell">
+          <div className="story-hero-copy">
+            <p className="chapter-label"><span className="status-dot" />Open source · accepting design partners</p>
+            <h1>Make your API sandbox fail before production does.</h1>
+            <p>pikopod builds a deterministic sandbox from your provider’s spec, rehearses the failure paths their sandbox cannot, and reproduces the failures production still finds.</p>
+            <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link" href={github}>View on GitHub</a></div>
           </div>
-          <div className="hero-facts" aria-label="Product characteristics"><div><span>Runtime</span><strong>One Go binary</strong></div><div><span>Execution</span><strong>Runs locally</strong></div><div><span>Data boundary</span><strong>Nothing leaves unless you configure it</strong></div></div>
+          <div className="story-hero-proof">
+            <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED{"\n"}    declined       POST /charges → 400{"\n"}    recovered      POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED{"\n"}    attempt1       POST /charges → 503{"\n"}    attempt2       POST /charges → 503{"\n"}    attempt3       POST /charges → 201</></Terminal>
+          </div>
+          <div className="story-facts" aria-label="Product characteristics"><span>One Go binary</span><span>Runs locally</span><span>Nothing leaves unless you configure it</span></div>
         </section>
 
-        <section className="section shell" id="loop">
-          <div className="section-heading"><span className="index">02 / THE LOOP</span><h2>One loop, not three tools</h2><p>Detecting the change is the easy part. The rest is being able to reproduce it, fix it, and keep it fixed. pikopod is one cycle, and each stage feeds the next.</p></div>
-          <div className="loop-table">
-            <div className="loop-num">1</div><div><strong>Integrate</strong> — a spec becomes a stateful sandbox</div><div><code>pikopod import</code></div>
-            <div className="loop-num">2</div><div><strong>Rehearse</strong> — every failure production will throw, not just the happy path</div><div><code>pikopod scenario list</code> · <code>run</code> · <code>chaos</code></div>
-            <div className="loop-num">3</div><div><strong>Ship</strong></div><div>—</div>
-            <div className="loop-num">4</div><div><strong>Observe</strong> — a proxy watches your traffic for failures and shape changes, while the spec watcher watches what they publish</div><div><code>pikopod up</code> · <code>incidents</code></div>
-            <div className="loop-num">5</div><div><strong>Reproduce</strong> — the failure becomes a runnable scenario in that same sandbox</div><div><code>pikopod scenario reproduce</code></div>
-            <div className="loop-num">6</div><div><strong>Fix and prove</strong></div><div><code>pikopod fix</code> · <code>scenario run</code></div>
-            <div className="loop-num">7</div><div><strong>Regress forever</strong></div><div><code>pikopod replay --ci</code></div>
+        <section className="story-section" id="sandbox"><div className="shell story-grid">
+          <div className="story-copy">
+            <span className="chapter-label">Rehearse</span>
+            <h2>A sandbox you can make fail on purpose</h2>
+            <p>Point staging at pikopod instead of the provider’s sandbox. It is built from their spec and deterministic: the same seed returns the same bytes.</p>
+            <p>Then arm the failure you need to test. Timeouts, rate limits, malformed responses, connection resets and webhook delivery faults are controlled inputs rather than production surprises.</p>
           </div>
-          <p className="callout"><strong>Stage 5 is the one nothing else does.</strong> You cannot ask a provider's sandbox to return that exact 503, with that body, at that point in your state machine. pikopod can, because the same tool recorded it and owns the sandbox. Mocking tools have a sandbox and no observer. Monitoring tools have an observer and no sandbox.</p>
-          <p className="after-note">You do not have to adopt all of it. Stages 1–2 need no proxy and nothing in your request path, and that is where most people start.</p>
-        </section>
-
-        <section className="section section-emphasis" id="reproduction"><div className="shell">
-          <div className="section-heading"><span className="index">03 / REPRODUCTION</span><h2>Replay last Friday's 503 on your laptop</h2><p>Your provider returned 503 to <code>POST /charges</code> for ninety seconds. Forty charges are in a state your code has never been in, and you cannot reproduce it — their sandbox will not return a 503 on request, and if it would, it would not return <em>that</em> 503, with <em>that</em> body, at <em>that</em> point in your state machine.</p></div>
-          <Terminal label="Example incident reproduction"><><span className="prompt">$</span> pikopod incidents{"\n"}<span className="err">[ERR]</span> incident upstream_error  POST /charges (examplepay) · 3 occurrence(s){"\n"}  fp_14835fa32dfb{"\n"}  <span className="field">reproduce:</span> pikopod scenario reproduce fp_14835fa32dfb{"\n\n"}<span className="prompt">$</span> pikopod scenario reproduce fp_14835fa32dfb{"\n"}reproduced fp_14835fa32dfb (examplepay answered 503 on POST /charges){"\n"}  → pikopod-data/scenarios/incident-14835fa32dfb.yaml{"\n"}<span className="ok">PASSED</span> — 1 assertion(s) passed; 0 not evaluated</></Terminal>
-          <p className="terminal-caption"><code>reproduce</code> arms the same failure in your sandbox and replays the recorded request at it, so the break happens on your laptop instead of in production. The generated pack is an ordinary scenario — commit it and it guards that path forever.</p>
-          <p className="callout"><strong>Reproduced requests are rebuilt from redacted recordings.</strong> Identifiers are format-preserving tokens, and anything the sanitizer could not classify was dropped before it reached disk. Every generated pack says so. For a 5xx or a timeout that changes nothing — the fault is armed on method and path. For a 4xx your own payload caused, the body matters.</p>
+          <div className="story-proof">
+            <Terminal label="Import a provider specification and inject a fault"><><span className="prompt">$</span> pikopod import examplepay --spec openapi.json{"\n"}sandbox examplepay registered (4 endpoints){"\n"}{"\n"}<span className="prompt">$</span> pikopod chaos examplepay --kind error --status 503 --method POST --path /v1/charges{"\n"}armed: POST /v1/charges → 503</></Terminal>
+            <p className="terminal-caption">No proxy, account or authored mock is required to start.</p>
+          </div>
         </div></section>
 
-        <section className="section shell" id="sandbox">
-          <div className="section-heading"><span className="index">04 / SANDBOX</span><h2>A sandbox that behaves like your provider</h2><p>Point your staging environment at pikopod instead of the provider's own sandbox. It is built from their spec, and it is deterministic — same seed, same bytes, every run. Unlike the provider's sandbox, you can make it misbehave on purpose.</p></div>
-          <Terminal label="Example sandbox import and serve"><><span className="prompt">$</span> pikopod import examplepay --spec https://api.examplepay.com/openapi.json{"\n"}<span className="prompt">$</span> pikopod up{"\n\n"}sandbox examplepay registered (4 endpoints){"\n"}serve it with `pikopod up` → http://127.0.0.1:4600/examplepay/...</></Terminal>
-          <div className="sub-block">
-            <h3>Make it fail on demand</h3>
-            <Terminal label="Example chaos fault injection"><><span className="prompt">$</span> pikopod chaos examplepay --kind error --status 503 --method POST --path /v1/charges{"\n\n"}armed: {"{"}"method":"POST","path":"/v1/charges","kind":"error","status":503,"probability":1{"}"}</></Terminal>
-            <p className="mono-note">Twelve fault kinds: <code>error</code>, <code>latency</code>, <code>hang</code>, <code>slow_body</code>, <code>rate_limit</code>, <code>connection_reset</code>, <code>malformed_response</code>, <code>wrong_content_length</code>, and the webhook faults <code>duplicate_webhook</code>, <code>drop_webhook</code>, <code>reorder_webhook</code> and <code>delay_webhook</code>. <code>duplicate_webhook</code> is the double-charge story. The provider's own sandbox will not do any of these for you.</p>
+        <section className="story-section story-section-alt" id="scenarios"><div className="shell story-grid story-grid-reverse">
+          <div className="story-copy">
+            <span className="chapter-label">Bind</span>
+            <h2>Failure stories attach to the API you actually have</h2>
+            <p>Eleven provider-agnostic scenarios cover declines, timeouts, retries, partial failures and webhook delivery. pikopod binds each story to operations declared in the imported spec.</p>
+            <p>If the spec does not contain enough evidence, it refuses the binding and names the missing fact instead of inventing a test.</p>
           </div>
-          <div className="sub-block">
-            <h3>Does it work on a real API?</h3>
-            <p className="hero-copy">Stripe publishes its OpenAPI document under MIT. 419 paths and 7.7 MB become 594 endpoints in about 0.13 seconds, and eight of the eleven archetypes bind.</p>
-            <p className="hero-copy">Three do not, and that is the part worth reading. <code>invalid_request</code> cannot bind because Stripe declares no 4xx response on any of its 297 POST operations — errors go through <code>default</code>. So pikopod names the fact that was missing instead of guessing a test into existence. You can check that with <code>jq</code> in a minute.</p>
-            <p className="mono-note">This is not a claim that pikopod supports Stripe, and it is not an endorsement by them. It is one reproducible run against a public document.</p>
+          <div className="story-proof">
+            <Terminal label="List failure scenarios available for an API"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}<span className="ok">✓</span> declines             1 binding{"\n"}<span className="ok">✓</span> timeouts             1 binding{"\n"}<span className="ok">✓</span> retry_storm          1 binding{"\n"}<span className="warn">✗</span> duplicate_delivery{"\n"}    <span className="dim">no webhook event for role 'emittedEvent'</span></></Terminal>
           </div>
-        </section>
+        </div></section>
 
-        <section className="section shell" id="scenarios">
-          <div className="section-heading"><span className="index">05 / SCENARIOS</span><h2>Failure scenarios that bind to your API</h2><p>pikopod ships eleven provider-agnostic failure stories — declines, timeouts, duplicate delivery, rate-limit backoff, partial failure, downtime recovery and more. You do not write them. They bind themselves to your API from its spec, and tell you which ones your integration can actually support.</p></div>
-          <Terminal label="Example scenario archetype listing"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n\n"}archetypes vs examplepay (4 endpoints):{"\n"}  <span className="ok">✓</span> happy_path                 Happy path  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> unauthorized               Unauthorized  (1 candidate binding(s)){"\n"}  <span className="warn">✗</span> invalid_request            Invalid request{"\n"}      <span className="dim">no operation matching {"{"}"crud":"CREATE","hasErrorResponseClass":"4XX"{"}"} for role 'op'</span>{"\n"}  <span className="ok">✓</span> rate_limit_backoff         Rate limit and backoff  (1 candidate binding(s)){"\n"}  <span className="warn">✗</span> duplicate_delivery         Duplicate delivery{"\n"}      <span className="dim">no webhookEvent matching {"{}"} for role 'emittedEvent'</span>{"\n"}  <span className="ok">✓</span> retry_storm                Retry storm with recovery  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> declines                   Declines  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> timeouts                   Timeouts  (1 candidate binding(s))</></Terminal>
-          <p className="callout"><strong>A refusal is an answer.</strong> When an archetype cannot bind, pikopod says which role it could not fill and why. It will not bind on a guess, because a test resting on a guess fails for reasons that have nothing to do with your code.</p>
-        </section>
-
-        <section className="section shell" id="observe">
-          <div className="section-heading"><span className="index">06 / OBSERVE</span><h2>Incidents and drift</h2></div>
-          <div className="tier-list">
-            <article><h3>incidents</h3><p>The upstream answered 5xx, throttled you with a 429, or could not be reached at all. These are facts about one request, so they need no baseline and fire from the very first one.</p></article>
-            <article><h3>drift</h3><p>The shape of a successful response changed. This needs a baseline, so it stays quiet for the first 50 samples <strong>and</strong> 48 hours — both gates, not either: a reference built from five responses hasn't seen your optional fields yet.</p></article>
+        <section className="story-section" id="reproduce"><div className="shell story-grid">
+          <div className="story-copy">
+            <span className="chapter-label">Reproduce</span>
+            <h2>Replay last Friday’s 503 on your laptop</h2>
+            <p>The observing agent records a redacted failure. One command arms that same response in the sandbox and replays the recorded request against it.</p>
+            <p>The result is an ordinary scenario file: inspect it, commit it, and keep the production failure as a regression test.</p>
           </div>
-          <div className="signal-grid mt-10">
-            <article><span className="signal-label"><i className="info-dot" />DECLARED</span><h3>What they published</h3><p>We re-fetch the spec your provider publishes and diff it against the version you pinned. Severity is derived from the shape of the change — never hand-assigned — so "breaking" means the same thing on every endpoint.</p></article>
-            <article><span className="signal-label"><i className="warn-dot" />OBSERVED</span><h3>What they sent</h3><p>A fail-open reverse proxy sits in front of your provider. It forwards everything untouched, learns what normal looks like, then reports structural changes in the responses you actually receive.</p></article>
-            <div className="join"><span className="join-line" /><div><span className="signal-label">THE JOIN</span><h3>Evidence changes the verdict.</h3><p>Traffic evidence raises the severity of a declared change. A declared change downgrades an observed one to documented rather than silent. Holding both sides is <strong>why</strong> a reproduction is possible at all. It is the architecture; stage 5 is what the architecture is for.</p></div></div>
+          <div className="story-proof">
+            <Terminal label="Reproduce a production incident"><><span className="prompt">$</span> pikopod scenario reproduce fp_14835fa32dfb{"\n"}reproduced examplepay 503 on POST /charges{"\n"}→ scenarios/incident-14835fa32dfb.yaml{"\n"}<span className="ok">PASSED</span> — 1 assertion passed</></Terminal>
+            <p className="terminal-caption">Recordings are redacted before they touch disk. Unclassified values are dropped.</p>
           </div>
-        </section>
+        </div></section>
 
-        <section className="section shell" id="describe">
-          <div className="section-heading"><span className="index">07 / GROUNDED GENERATION</span><h2>Describe a failure in English</h2><p>Bring your own model key and describe the scenario you want. The model never writes test steps — it picks from the archetypes that actually bind to your API and fills in operations that actually exist. It cannot invent an endpoint.</p></div>
-          <Terminal label="Example scenario creation from a description"><><span className="prompt">$</span> pikopod scenario create examplepay "a timeout after the charge succeeds"{"\n\n"}grounding "a timeout after the charge succeeds" against examplepay{"\n"}  (4 operations, 8 applicable archetypes)…</></Terminal>
-          <p className="callout"><strong>The model is fenced, not trusted.</strong> It emits a constrained intent, validated against a closed inventory built from your imported spec. Anything outside that inventory is a typed refusal rather than a broken test. It must also declare what your description asked for that it could not capture.</p>
-          <p className="mono-note">Optional. Everything else on this page works with no model key at all.</p>
-        </section>
-
-        <section className="section shell" id="replay">
-          <div className="section-heading"><span className="index">08 / REPLAY</span><h2>Replay your own production traffic</h2><p>The observing agent records the traffic it sees — redacted before it touches disk. Those recordings become fixtures: the sandbox serves them for requests the spec cannot answer, and CI replays them offline to gate a build.</p></div>
-          <Terminal label="Example offline replay in CI"><><span className="prompt">$</span> pikopod replay --ci</></Terminal>
-          <p className="mono-note">Exit <code>0</code> clean, <code>1</code> the check ran and failed, <code>2</code> tool error. No network, no provider, no staging environment.</p>
-          <div className="tier-list">
-            <article><h3>exact</h3><p>Method, path and a normalised body hash.</p></article>
-            <article><h3>shape</h3><p>Method, path template and the body's field set, values ignored.</p></article>
-            <article><h3>sequence</h3><p>The next unserved recording for that method and template.</p></article>
+        <section className="story-section story-section-alt" id="observe"><div className="shell">
+          <div className="story-intro">
+            <span className="chapter-label">Observe</span>
+            <h2>See what changed, then keep the fix</h2>
+            <p>pikopod compares what the provider declares with what your integration receives. Those two signals produce a useful verdict instead of another isolated alert.</p>
           </div>
-          <p className="after-note">Every response names the tier it was served from, so a degraded match is visible rather than silent.</p>
-          <div className="sub-block">
-            <h3>Also: one line of CI that fails on a breaking spec change</h3>
-            <Terminal label="Example specification diff"><><span className="prompt">$</span> pikopod spec-diff git:origin/main:openapi.yaml openapi.yaml --fail-on ERR{"\n\n"}1 change(s): 1 ERR, 0 WARN, 0 INFO{"\n\n"}<span className="err">ERR</span>  GET  /charges/{"{id}"}          response-required-property-removed{"\n"}     response 200 (application/json) field <span className="field">`status`</span> (guaranteed) removed{"\n"}     — consumers reading it break  [fp_57f7a3158a88]{"\n\n"}<span className="err">breaking declared drift at/above ERR — failing the gate (exit 1)</span></></Terminal>
-            <p className="mono-note">It reads straight from git with no checkout. No proxy, no account and no setup.</p>
+          <div className="evidence-pair">
+            <article><span className="signal-label"><i className="info-dot" />Declared</span><h3>The published contract</h3><p>A spec diff identifies breaking changes and can fail CI before they merge.</p></article>
+            <article><span className="signal-label"><i className="warn-dot" />Observed</span><h3>The responses you received</h3><p>A fail-open proxy reports incidents immediately and structural drift after a stable baseline exists.</p></article>
           </div>
-        </section>
-
-        <section className="section shell" id="safety">
-          <div className="section-heading"><span className="index">09 / FAILURE MODE</span><h2>It cannot slow your traffic down</h2></div>
-          <div className="bench-block">{"BenchmarkProxyServe                 82,041 ns/op\nBenchmarkProxyServeObserverWedged   81,868 ns/op"}</div>
-          <p className="mono-note">Observation jammed completely — nothing draining the capture channel — serving the same workload. Under 1% apart, run to run. Both figures are a full loopback round trip on one machine, so read the difference, not the absolute.</p>
-          <p className="after-note">The sandbox is not in your request path at all. It is a local binary you point staging at. This argument only applies to the observing agent, which most people adopt last.</p>
-
-          <div className="safety-list">
-            <article><span>01</span><div><h3>It serves first and observes afterwards.</h3><p>Observation is asynchronous and bounded; every capture stage is isolated and counted. If pikopod breaks internally, your traffic still flows.</p></div></article>
-            <article><span>02</span><div><h3>It never retries.</h3><p>An automatic retry in front of a payments API is a double-charge window.</p></div></article>
-            <article><span>03</span><div><h3>It redacts before the disk, not after.</h3><p>Credentials become placeholders and identifiers become format-preserving tokens. <code>pikopod inspect</code> shows you exactly what was kept.</p></div></article>
-            <article><span>04</span><div><h3>It initiates no network traffic of its own.</h3><p>Your Slack webhook, your git forge, your own model key — all because you configured them.</p></div></article>
+          <div className="story-wide-proof">
+            <Terminal label="Run an offline regression check"><><span className="prompt">$</span> pikopod replay --ci{"\n"}<span className="ok">PASSED</span> 42 recordings · exact 37 · shape 5{"\n"}{"\n"}<span className="prompt">$</span> pikopod spec-diff origin/main:openapi.yaml openapi.yaml --fail-on ERR{"\n"}<span className="err">ERR</span> GET /charges/{"{id}"} response field `status` removed{"\n"}<span className="err">breaking declared drift — exit 1</span></></Terminal>
+            <p className="terminal-caption">Replay runs offline. Exit 0 is clean, 1 means the check found a failure, and 2 means the tool could not run.</p>
           </div>
-        </section>
+        </div></section>
+
+        <section className="story-section" id="workflow"><div className="shell workflow-layout">
+          <div className="story-intro">
+            <span className="chapter-label">The complete loop</span>
+            <h2>Each result becomes the input to the next step</h2>
+            <p>You can begin with the local sandbox. Observation only enters the path when you decide to add it.</p>
+          </div>
+          <ol className="workflow-list">
+            <li><span>01</span><div><strong>Integrate</strong><p>Import a spec into a stateful sandbox.</p></div></li>
+            <li><span>02</span><div><strong>Rehearse</strong><p>Run failure scenarios before shipping.</p></div></li>
+            <li><span>03</span><div><strong>Ship</strong><p>Release with the known paths covered.</p></div></li>
+            <li><span>04</span><div><strong>Observe</strong><p>Capture incidents and contract drift.</p></div></li>
+            <li><span>05</span><div><strong>Reproduce</strong><p>Turn the failure into a local scenario.</p></div></li>
+            <li><span>06</span><div><strong>Fix and prove</strong><p>Run the scenario against the repair.</p></div></li>
+            <li><span>07</span><div><strong>Regress forever</strong><p>Keep the scenario in offline CI.</p></div></li>
+          </ol>
+        </div></section>
+
+        <section className="story-section story-section-alt" id="safety"><div className="shell story-grid story-grid-reverse">
+          <div className="story-copy">
+            <span className="chapter-label">Safety boundary</span>
+            <h2>Observation cannot hold up your traffic</h2>
+            <p>The proxy serves first and observes afterwards through bounded, isolated capture stages. It never retries and initiates no network traffic unless you configure an integration.</p>
+            <p>Credentials are replaced and identifiers are tokenised before recordings reach disk.</p>
+          </div>
+          <div className="story-proof benchmark-proof">
+            <div className="bench-block">{"BenchmarkProxyServe                 82,041 ns/op\nBenchmarkProxyServeObserverWedged   81,868 ns/op"}</div>
+            <p className="terminal-caption">Observation fully jammed versus normal serving: under 1% apart in the same loopback benchmark.</p>
+          </div>
+        </div></section>
 
         <section className="partner-section" id="apply"><div className="shell partner-grid">
-          <div className="partner-copy"><span className="index">10 / DESIGN PARTNERS</span><h2>Accepting design partners for Q4 2026</h2><p>pikopod is open source and works today. We're looking for a small number of teams who depend on third-party APIs in production and are willing to run it against a real provider while we build the hosted layer.</p>
-            <div className="terms"><div><h3>What you get</h3><p>Direct line to the maintainer. Your provider's quirks shape what gets built. Free access to the hosted layer through the program and preferential pricing after.</p></div><div><h3>What we ask</h3><p>Run pikopod against at least one provider you actually depend on. A short call every two weeks. Tell us when it's wrong.</p></div></div>
+          <div className="partner-copy"><span className="chapter-label">Design partners · Q4 2026</span><h2>Run pikopod against a provider you depend on</h2><p>pikopod is open source and works today. We are looking for a small number of teams willing to use it against a real production dependency while the hosted layer is built.</p>
+            <div className="terms"><div><h3>What you get</h3><p>A direct line to the maintainer, influence over provider support, and free hosted access during the program.</p></div><div><h3>What we ask</h3><p>Use it with one real provider, join a short call every two weeks, and tell us when it is wrong.</p></div></div>
           </div><ApplicationForm />
         </div></section>
       </main>
 
-      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top">pikopod_</a><p>pikopod is open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a><a href={`${github}/blob/main/CODE_OF_CONDUCT.md`}>Code of conduct</a></div><div><h3>Legal</h3><a href={`${github}/blob/main/LICENSE`}>Apache-2.0</a></div></div></footer>
+      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top">pikopod_</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
     </div>
   );
 }
