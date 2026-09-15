@@ -227,7 +227,7 @@ footer { border-top: 1px solid var(--border); padding-block: 60px; }.footer-grid
   .partner-section { padding-block: 62px; }
 }
 /* Sequential proof-led narrative */
-.story-hero { display: grid; grid-template-columns: minmax(0, 1.22fr) minmax(380px, .78fr); align-items: start; column-gap: clamp(48px, 6vw, 76px); padding-block: clamp(76px, 9vw, 112px) 64px; }
+.story-hero { display: grid; grid-template-columns: minmax(0, 1.32fr) minmax(360px, .68fr); align-items: start; column-gap: clamp(44px, 5.5vw, 68px); padding-block: clamp(76px, 9vw, 112px) 64px; }
 .story-hero-copy { align-self: center; }
 
 .chapter-label { display: inline-flex; align-items: center; gap: 8px; color: var(--info); font-family: var(--font-mono); font-size: .64rem; text-transform: uppercase; }
