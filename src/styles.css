@@ -283,4 +283,7 @@ footer { border-top: 1px solid var(--border); padding-block: 60px; }.footer-grid
   .evidence-pair article + article { border-top: 1px solid var(--border); border-left: 0; padding-left: 0; }
   .story-wide-proof { margin-top: 34px; }
   .workflow-layout .story-intro { position: static; }
+  .partner-grid { grid-template-columns: 1fr; gap: 42px; }
+  .terms { grid-template-columns: 1fr; gap: 22px; margin-top: 34px; }
+  .form-row, .error-row { grid-template-columns: 1fr; gap: 0; }
 }
