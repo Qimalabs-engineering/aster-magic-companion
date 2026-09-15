@@ -8,10 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "pikopod — Catch third-party API drift" },
-      { name: "description", content: "Watch published API specs and real responses for breaking provider changes with one local Go binary." },
-      { property: "og:title", content: "pikopod — Catch third-party API drift" },
-      { property: "og:description", content: "Watch published API specs and real responses for breaking provider changes with one local Go binary." },
+      { title: "pikopod — rehearse the failures, reproduce the ones you missed" },
+      { name: "description", content: "An open-source sandbox for the APIs you depend on. Make it fail on purpose before you ship, and replay the exact failure production hit." },
+      { property: "og:title", content: "pikopod — rehearse the failures, reproduce the ones you missed" },
+      { property: "og:description", content: "An open-source sandbox for the APIs you depend on. Make it fail on purpose before you ship, and replay the exact failure production hit." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
