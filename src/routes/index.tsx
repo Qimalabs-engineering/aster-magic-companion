@@ -203,7 +203,7 @@ function Index() {
         <section className="story-hero shell">
           <div className="story-hero-copy">
             <p className="chapter-label"><span className="status-dot" />Open source · accepting design partners</p>
-            <h1>An open-source sandbox for the APIs you depend on.</h1>
+            <h1>Rehearse API failures before you ship, and replay the ones production already hit.</h1>
             <p>pikopod builds a deterministic sandbox from your provider’s spec, rehearses the failure paths their sandbox cannot, and reproduces the failures production still finds.</p>
             <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link" href={github}>View on GitHub</a></div>
           </div>
