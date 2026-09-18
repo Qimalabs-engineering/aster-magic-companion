@@ -194,7 +194,7 @@ function Index() {
       <header className="site-header">
         <a className="wordmark" href="#top">pikopod<span className="cursor-mark">_</span></a>
         <nav aria-label="Primary navigation">
-          <a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href={github}>GitHub</a><ThemeToggle />
+          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href={github}>GitHub</a><ThemeToggle />
           <a className="nav-cta" href="#apply">Apply</a>
         </nav>
       </header>
@@ -212,6 +212,18 @@ function Index() {
           </div>
           <div className="story-facts" aria-label="Product characteristics"><span>One Go binary</span><span>Runs locally</span><span>Nothing leaves unless you configure it</span></div>
         </section>
+
+        <section className="story-section story-section-alt" id="demo"><div className="shell demo-layout">
+          <div className="story-intro">
+            <span className="chapter-label">Demo</span>
+            <h2>The whole loop in half a minute</h2>
+            <p>Import a spec, arm a failure, rehearse it, catch the one production still found, and keep it as an offline regression test.</p>
+          </div>
+          <figure className="demo-figure">
+            <video src="/pikopod-demo.mp4" poster="/pikopod-demo-poster.jpg" controls playsInline preload="none" aria-label="pikopod demo: the full loop from spec import to offline regression" />
+            <figcaption>Recorded command output. No audio.</figcaption>
+          </figure>
+        </div></section>
 
         <section className="story-section" id="sandbox"><div className="shell story-grid">
           <div className="story-copy">
