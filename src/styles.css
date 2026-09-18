@@ -289,3 +289,10 @@ footer { border-top: 1px solid var(--border); padding-block: 60px; }.footer-grid
   .terms { grid-template-columns: 1fr; gap: 22px; margin-top: 34px; }
   .form-row, .error-row { grid-template-columns: 1fr; gap: 0; }
 }
+
+/* Demo video */
+.demo-layout { display: grid; gap: 40px; }
+.demo-figure { margin: 0; }
+.demo-figure video { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--terminal); }
+.demo-figure figcaption { margin-top: 14px; color: var(--muted-foreground); font-family: var(--font-mono); font-size: .64rem; }
+@media (max-width: 760px) { .demo-layout { gap: 26px; } }
