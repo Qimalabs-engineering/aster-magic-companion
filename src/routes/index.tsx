@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Children, cloneElement, FormEvent, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
-import { Moon, Sun } from "lucide-react";
-import { z } from "zod";
+import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Mail, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -19,17 +17,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const applicationSchema = z.object({
-  workEmail: z.string().trim().email("Enter a valid work email.").max(254),
-  company: z.string().trim().min(1, "Enter your company name.").max(120),
-  providers: z.string().trim().min(1, "Tell us which providers you depend on.").max(500),
-  currentBreakage: z.string().trim().max(2000, "Keep this under 2,000 characters."),
-});
-
-type FormFields = z.infer<typeof applicationSchema>;
-type FieldErrors = Partial<Record<keyof FormFields | "form", string>>;
-
 const github = "https://github.com/pikopod/pikopod";
+const designPartnerEmail = "mailto:hello@pikopod.com?subject=Design%20partner%20application";
 
 function nodeText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -116,7 +105,7 @@ function ThemeToggle() {
 
   useEffect(() => {
     const stored = window.localStorage.getItem("pikopod-theme");
-    const nextDark = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const nextDark = stored ? stored === "dark" : true;
     document.documentElement.classList.toggle("dark", nextDark);
     setDark(nextDark);
   }, []);
@@ -129,63 +118,6 @@ function ThemeToggle() {
   };
 
   return <Button variant="quiet" size="icon" onClick={toggle} aria-label={`Use ${dark ? "light" : "dark"} theme`}>{dark ? <Sun size={16} /> : <Moon size={16} />}</Button>;
-}
-
-function ApplicationForm() {
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const values = {
-      workEmail: String(form.get("workEmail") ?? ""),
-      company: String(form.get("company") ?? ""),
-      providers: String(form.get("providers") ?? ""),
-      currentBreakage: String(form.get("currentBreakage") ?? ""),
-    };
-    const parsed = applicationSchema.safeParse(values);
-    if (!parsed.success) {
-      const next: FieldErrors = {};
-      parsed.error.issues.forEach((issue) => { next[issue.path[0] as keyof FormFields] = issue.message; });
-      setErrors(next);
-      return;
-    }
-    setErrors({});
-    setSubmitting(true);
-    const { error } = await supabase.from("design_partner_applications").insert({
-      work_email: parsed.data.workEmail,
-      company: parsed.data.company,
-      providers: parsed.data.providers,
-      current_breakage: parsed.data.currentBreakage || null,
-    });
-    setSubmitting(false);
-    if (error) {
-      setErrors({ form: "We couldn't save your application. Please try again." });
-      return;
-    }
-    setSubmitted(true);
-  }
-
-  if (submitted) return <div className="success-panel" role="status"><span className="label">APPLICATION RECEIVED</span><p>Thanks — we'll be in touch within two working days.</p></div>;
-
-  const field = (name: keyof FormFields) => errors[name] ? <p className="field-error" id={`${name}-error`}>{errors[name]}</p> : null;
-  return (
-    <form onSubmit={submit} noValidate className="application-form">
-      <div className="form-row">
-        <label>Work email<input name="workEmail" type="email" autoComplete="email" aria-describedby="workEmail-error" required /></label>
-        <label>Company<input name="company" autoComplete="organization" aria-describedby="company-error" required /></label>
-      </div>
-      <div className="error-row">{field("workEmail")}{field("company")}</div>
-      <label>Which providers do you depend on?<input name="providers" placeholder="Stripe, Plaid, an internal billing service..." aria-describedby="providers-error" required /></label>
-      {field("providers")}
-      <label>What breaks today? <span className="text-subtle">(optional)</span><textarea name="currentBreakage" rows={5} aria-describedby="currentBreakage-error" /></label>
-      {field("currentBreakage")}
-      {errors.form && <p className="field-error" role="alert">{errors.form}</p>}
-      <Button type="submit" disabled={submitting}>{submitting ? "Sending…" : "Apply"}</Button>
-    </form>
-  );
 }
 
 function Index() {
@@ -312,7 +244,14 @@ function Index() {
         <section className="partner-section" id="apply"><div className="shell partner-grid">
           <div className="partner-copy"><span className="chapter-label">Design partners · Q4 2026</span><h2>Run pikopod against a provider you depend on</h2><p>pikopod is open source and works today. We are looking for a small number of teams willing to use it against a real production dependency while the hosted layer is built.</p>
             <div className="terms"><div><h3>What you get</h3><p>A direct line to the maintainer, influence over provider support, and free hosted access during the program.</p></div><div><h3>What we ask</h3><p>Use it with one real provider, join a short call every two weeks, and tell us when it is wrong.</p></div></div>
-          </div><ApplicationForm />
+          </div>
+          <div className="partner-cta">
+            <span className="partner-cta-icon" aria-hidden="true"><Mail size={21} /></span>
+            <p className="partner-cta-kicker">Tell us what your integration depends on</p>
+            <h3>Bring one real provider and one failure you need to rehearse.</h3>
+            <p>Send us a short note about your team, the API you use, and what breaks today.</p>
+            <a className="partner-email" href={designPartnerEmail}>hello@pikopod.com <ArrowUpRight size={17} aria-hidden="true" /></a>
+          </div>
         </div></section>
       </main>
 
