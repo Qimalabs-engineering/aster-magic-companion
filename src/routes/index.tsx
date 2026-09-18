@@ -221,7 +221,7 @@ function Index() {
           </div>
           <figure className="demo-figure">
             <video src="/pikopod-demo.mp4" poster="/pikopod-demo-poster.jpg" controls playsInline preload="none" aria-label="pikopod demo: the full loop from spec import to offline regression" />
-            <figcaption>Recorded command output. No audio.</figcaption>
+            <figcaption>Recorded command output with narration. 35 seconds.</figcaption>
           </figure>
         </div></section>
 
