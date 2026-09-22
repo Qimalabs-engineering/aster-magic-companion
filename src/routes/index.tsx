@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react";
-import pikopodMark from "@/assets/pikopod-mark.svg.asset.json";
 import pikopodDemo from "@/assets/pikopod-demo.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -149,7 +148,7 @@ function Index() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="site-header">
-        <a className="wordmark" href="#top"><img src={pikopodMark.url} alt="" />pikopod</a>
+        <a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a>
         <nav aria-label="Primary navigation">
           <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={github}>GitHub</a>
           <a className="nav-cta" href="#apply">Apply</a>
@@ -279,7 +278,7 @@ function Index() {
         </div></section>
       </main>
 
-      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src={pikopodMark.url} alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
+      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
     </div>
   );
 }
