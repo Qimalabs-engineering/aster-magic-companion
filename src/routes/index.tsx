@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react";
-import pikopodDemo from "@/assets/pikopod-demo.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -176,7 +175,10 @@ function Index() {
             <p>Import a spec, arm a failure, rehearse it, catch the one production still found, and keep it as an offline regression test.</p>
           </div>
           <figure className="demo-figure">
-            <video src={pikopodDemo.url} poster="/pikopod-demo-poster.jpg" controls playsInline preload="none" aria-label="pikopod demo: the full loop from spec import to offline regression" />
+            <video poster="/pikopod-demo-poster.jpg" controls playsInline preload="metadata" aria-label="pikopod demo: the full loop from spec import to offline regression">
+              <source src="/pikopod-demo.mp4" type="video/mp4" />
+              Your browser does not support HTML video.
+            </video>
           </figure>
         </div></section>
 
