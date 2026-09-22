@@ -122,7 +122,6 @@
 .demo-layout .story-intro { margin: 14px 0 0; }
 .demo-figure { margin: 0; }
 .demo-figure video { display: block; width: 100%; border: 1px solid var(--border); border-radius: 8px; background: var(--terminal); box-shadow: 0 24px 64px color-mix(in oklab, var(--foreground) 9%, transparent); }
-.demo-figure figcaption { margin-top: 14px; color: var(--muted-foreground); font-family: var(--font-mono); font-size: .62rem; }
 
 .evidence-pair { display: grid; grid-template-columns: 1fr 1fr; border-block: 1px solid var(--border); }
 .evidence-pair article { padding: 34px 38px 38px 0; }.evidence-pair article + article { border-left: 1px solid var(--border); padding-left: 38px; }
