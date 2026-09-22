@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Mail } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react";
 import pikopodMark from "@/assets/pikopod-mark.svg.asset.json";
 
 export const Route = createFileRoute("/")({
@@ -96,6 +96,50 @@ function Terminal({ children, label }: { children: React.ReactNode; label: strin
         <code className="terminal-measure" aria-hidden="true">{children}</code>
         <code className="terminal-live"><span className="terminal-command">{command.slice(0, typedLength)}</span>{typedLength < command.length && <span className="terminal-caret" aria-hidden="true" />}{showResult && result && <span className="terminal-result">{"\n"}{result}</span>}</code>
       </pre>
+    </div>
+  );
+}
+
+const loopSteps = [
+  { number: "00", name: "Gate", description: "Fail the build when the spec changes shape. No proxy, no account.", icon: GitCompareArrows },
+  { number: "01", name: "Integrate", description: "Import a spec into a stateful sandbox.", icon: Import },
+  { number: "02", name: "Rehearse", description: "Run failure scenarios before shipping.", icon: Play },
+  { number: "03", name: "Ship", description: "Release with the known paths covered.", icon: CheckCircle2 },
+  { number: "04", name: "Observe", description: "Capture incidents and contract drift.", icon: Radio },
+  { number: "05", name: "Reproduce", description: "Turn the failure into a local scenario.", icon: RotateCcw },
+  { number: "06", name: "Fix and prove", description: "Run the scenario against the repair. The optional fix command can patch and open the PR with your own model key.", icon: ShieldCheck },
+  { number: "07", name: "Regress forever", description: "Keep the scenario in offline CI.", icon: RefreshCw },
+];
+
+function WorkflowLoop() {
+  const [activeStep, setActiveStep] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timer = window.setInterval(() => setActiveStep((step) => (step + 1) % loopSteps.length), 2200);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const active = loopSteps[activeStep] ?? loopSteps[0];
+  if (!active) return null;
+
+  return (
+    <div className="loop-visual">
+      <div className="loop-track" aria-label="pikopod workflow steps">
+        {loopSteps.map((step, index) => {
+          const Icon = step.icon;
+          return (
+            <button className={`loop-step${index === activeStep ? " is-active" : ""}`} type="button" key={step.number} onClick={() => setActiveStep(index)} aria-pressed={index === activeStep}>
+              <span className="loop-node"><Icon size={17} aria-hidden="true" /><small>{step.number}</small></span>
+              <strong>{step.name}</strong>
+            </button>
+          );
+        })}
+      </div>
+      <div className="loop-detail" aria-live="polite">
+        <span>{active.number}</span>
+        <div><strong>{active.name}</strong><p>{active.description}</p></div>
+      </div>
     </div>
   );
 }
@@ -197,16 +241,7 @@ function Index() {
             <h2>Each result becomes the input to the next step</h2>
             <p>You can begin with the local sandbox. Observation only enters the path when you decide to add it.</p>
           </div>
-          <ol className="workflow-list">
-            <li><span>00</span><div><strong>Gate</strong><p>Fail the build when the spec changes shape. No proxy, no account.</p></div></li>
-            <li><span>01</span><div><strong>Integrate</strong><p>Import a spec into a stateful sandbox.</p></div></li>
-            <li><span>02</span><div><strong>Rehearse</strong><p>Run failure scenarios before shipping.</p></div></li>
-            <li><span>03</span><div><strong>Ship</strong><p>Release with the known paths covered.</p></div></li>
-            <li><span>04</span><div><strong>Observe</strong><p>Capture incidents and contract drift.</p></div></li>
-            <li><span>05</span><div><strong>Reproduce</strong><p>Turn the failure into a local scenario.</p></div></li>
-            <li><span>06</span><div><strong>Fix and prove</strong><p>Run the scenario against the repair. An optional fix command patches and opens the PR, only with your own model key.</p></div></li>
-            <li><span>07</span><div><strong>Regress forever</strong><p>Keep the scenario in offline CI.</p></div></li>
-          </ol>
+          <WorkflowLoop />
         </div></section>
 
         <section className="story-section" id="mcp"><div className="shell">
