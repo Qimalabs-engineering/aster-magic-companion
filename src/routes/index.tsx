@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Mail, Moon, Sun } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight, Mail } from "lucide-react";
+import pikopodMark from "@/assets/pikopod-mark.svg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -100,33 +100,13 @@ function Terminal({ children, label }: { children: React.ReactNode; label: strin
   );
 }
 
-function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    const stored = window.localStorage.getItem("pikopod-theme");
-    const nextDark = stored ? stored === "dark" : true;
-    document.documentElement.classList.toggle("dark", nextDark);
-    setDark(nextDark);
-  }, []);
-
-  const toggle = () => {
-    const next = !dark;
-    document.documentElement.classList.toggle("dark", next);
-    window.localStorage.setItem("pikopod-theme", next ? "dark" : "light");
-    setDark(next);
-  };
-
-  return <Button variant="quiet" size="icon" onClick={toggle} aria-label={`Use ${dark ? "light" : "dark"} theme`}>{dark ? <Sun size={16} /> : <Moon size={16} />}</Button>;
-}
-
 function Index() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="site-header">
-        <a className="wordmark" href="#top">pikopod<span className="cursor-mark">_</span></a>
+        <a className="wordmark" href="#top"><img src={pikopodMark.url} alt="" />pikopod</a>
         <nav aria-label="Primary navigation">
-          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={github}>GitHub</a><ThemeToggle />
+          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={github}>GitHub</a>
           <a className="nav-cta" href="#apply">Apply</a>
         </nav>
       </header>
@@ -264,7 +244,7 @@ function Index() {
         </div></section>
       </main>
 
-      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top">pikopod_</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
+      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src={pikopodMark.url} alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
     </div>
   );
 }
