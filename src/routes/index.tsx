@@ -165,7 +165,7 @@ function Index() {
             <p>Then arm the failure you need. Timeouts, rate limits, malformed responses, connection resets and duplicate webhooks are controlled inputs. Put the sandbox into a scenario’s standing state and your own tests, Postman or a teammate’s browser meet that failure until you clear it. Here timeouts means the sandbox holds every GET /charges. Webhooks arrive wrapped and signed the way the provider sends them, and only for events the docs declare.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="Import a provider specification and set a standing failure state"><><span className="prompt">$</span> pikopod import examplepay --spec https://docs.examplepay.test{"\n"}sandbox examplepay registered (4 endpoints, 2 webhook events){"\n"}{"\n"}<span className="prompt">$</span> pikopod mode set examplepay timeouts{"\n"}examplepay: standing state timeouts (POST /charges → 504 until cleared)</></Terminal>
+            <Terminal label="Import a provider specification and set a standing failure state"><><span className="prompt">$</span> pikopod import examplepay --spec https://docs.examplepay.test{"\n"}sandbox examplepay registered (sbx_41d959476a09e5f9, 4 endpoints){"\n"}serve it with `pikopod up` → http://127.0.0.1:4600/examplepay/...{"\n"}{"\n"}<span className="prompt">$</span> pikopod mode set examplepay timeouts{"\n"}mode: timeouts (from archetype or pack timeouts){"\n"}  armed   latency on GET /charges{"\n"}point your app at the sandbox and run your own tests; clear it with `pikopod mode clear examplepay`</></Terminal>
             <p className="terminal-caption">No proxy, account or authored mock is required to start.</p>
           </div>
         </div></section>
