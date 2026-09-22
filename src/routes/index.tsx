@@ -206,7 +206,7 @@ function Index() {
             <article><span className="signal-label"><i className="warn-dot" />Observed</span><h3>The responses you received</h3><p>A fail-open proxy reports incidents immediately and structural drift after a stable baseline exists.</p></article>
           </div>
           <div className="story-wide-proof">
-            <Terminal label="Run an offline regression check"><><span className="prompt">$</span> pikopod replay --ci{"\n"}<span className="ok">PASSED</span> 42 recordings · exact 37 · shape 5{"\n"}{"\n"}<span className="prompt">$</span> pikopod spec-diff origin/main:openapi.yaml openapi.yaml --fail-on ERR --format githubactions{"\n"}<span className="err">ERR</span> GET /charges/{"{id}"} response field `status` removed{"\n"}<span className="err">breaking declared drift — exit 1</span></></Terminal>
+            <Terminal label="Run an offline regression check"><><span className="prompt">$</span> pikopod replay --ci{"\n"}examplepay: 37 recordings gated (1 pre-warmup skipped) — 0 finding(s){"\n"}clean — no drift against frozen baselines{"\n"}{"\n"}<span className="prompt">$</span> pikopod spec-diff origin/main:openapi.yaml openapi.yaml --fail-on ERR{"\n"}1 change(s): 1 ERR, 0 WARN, 0 INFO{"\n"}{"\n"}<span className="err">ERR</span>  GET    /charges/{"{id}"}                            endpoint-removed{"\n"}     endpoint removed from the spec  [fp_bcc85ba9a094]{"\n"}{"\n"}<span className="err">breaking declared drift at/above ERR — failing the gate (exit 1)</span></></Terminal>
             <p className="terminal-caption">Replay runs offline. Exit 0 is clean, 1 means the check found a failure, and 2 means the tool could not run.</p>
           </div>
         </div></section>
