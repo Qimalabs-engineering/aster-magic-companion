@@ -190,7 +190,7 @@ function Index() {
             <p>The result is an ordinary scenario file: inspect it, commit it, and keep the production failure as a regression test. When the agent runs on another host, one command exports the incident as a bundle that reproduce and fix accept on your laptop, with nothing else copied.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="Reproduce a production incident"><><span className="prompt">$</span> pikopod scenario reproduce fp_14835fa32dfb{"\n"}reproduced examplepay 503 on POST /charges{"\n"}→ scenarios/incident-14835fa32dfb.yaml{"\n"}<span className="ok">PASSED</span> — 1 assertion passed</></Terminal>
+            <Terminal label="Reproduce a production incident"><><span className="prompt">$</span> pikopod scenario reproduce fp_14835fa32dfb{"\n"}reproduced fp_14835fa32dfb (examplepay answered 503 on POST /charges) as pikopod-data/scenarios/incident-14835fa32dfb.yaml{"\n"}<span className="ok">PASSED</span> — 1 assertion(s) passed; 0 not evaluated{"\n"}the failure now happens locally — fix it, then re-run: pikopod scenario run examplepay incident-14835fa32dfb</></Terminal>
             <p className="terminal-caption">Recordings are redacted before they touch disk. Unclassified values are dropped. Each incident says how long it stays reproducible.</p>
           </div>
         </div></section>
