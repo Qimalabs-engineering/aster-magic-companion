@@ -140,7 +140,7 @@ function Index() {
             <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link" href={github}>View on GitHub</a></div>
           </div>
           <div className="story-hero-proof">
-            <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED{"\n"}    declined       POST /charges → 400{"\n"}    recovered      POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED{"\n"}    attempt1       POST /charges → 503{"\n"}    attempt2       POST /charges → 503{"\n"}    attempt3       POST /charges → 201</></Terminal>
+            <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         declined         POST /charges → 400{"\n"}    <span className="ok">PASSED</span>         recovered        POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         attempt1         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt2         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt3         POST /charges → 201</></Terminal>
           </div>
           <div className="story-facts" aria-label="Product characteristics"><span>One Go binary</span><span>Runs locally</span><span>No accounts, no telemetry</span><span>Nothing leaves unless you configure it</span></div>
         </section>
@@ -162,10 +162,10 @@ function Index() {
             <span className="chapter-label">Rehearse</span>
             <h2>A sandbox you can make fail on purpose</h2>
             <p>Point staging at pikopod instead of the provider’s sandbox. Import their OpenAPI, Swagger, Postman or GraphQL spec, or a documentation URL: pikopod finds the linked or well-known spec first and only extracts one with a model if you configured your own key. It is deterministic: the same seed returns the same bytes.</p>
-            <p>Then arm the failure you need. Timeouts, rate limits, malformed responses, connection resets and duplicate webhooks are controlled inputs. Put the sandbox into a scenario’s standing state and your own tests, Postman or a teammate’s browser meet that failure until you clear it. Webhooks arrive wrapped and signed the way the provider sends them, and only for events the docs declare.</p>
+            <p>Then arm the failure you need. Timeouts, rate limits, malformed responses, connection resets and duplicate webhooks are controlled inputs. Put the sandbox into a scenario’s standing state and your own tests, Postman or a teammate’s browser meet that failure until you clear it. Here timeouts means the sandbox holds every GET /charges. Webhooks arrive wrapped and signed the way the provider sends them, and only for events the docs declare.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="Import a provider specification and set a standing failure state"><><span className="prompt">$</span> pikopod import examplepay --spec https://docs.examplepay.test{"\n"}sandbox examplepay registered (4 endpoints, 2 webhook events){"\n"}{"\n"}<span className="prompt">$</span> pikopod mode set examplepay timeouts{"\n"}examplepay: standing state timeouts (POST /charges → 504 until cleared)</></Terminal>
+            <Terminal label="Import a provider specification and set a standing failure state"><><span className="prompt">$</span> pikopod import examplepay --spec https://docs.examplepay.test{"\n"}sandbox examplepay registered (sbx_41d959476a09e5f9, 4 endpoints){"\n"}serve it with `pikopod up` → http://127.0.0.1:4600/examplepay/...{"\n"}{"\n"}<span className="prompt">$</span> pikopod mode set examplepay timeouts{"\n"}mode: timeouts (from archetype or pack timeouts){"\n"}  armed   latency on GET /charges{"\n"}point your app at the sandbox and run your own tests; clear it with `pikopod mode clear examplepay`</></Terminal>
             <p className="terminal-caption">No proxy, account or authored mock is required to start.</p>
           </div>
         </div></section>
@@ -178,7 +178,7 @@ function Index() {
             <p>If the spec does not contain enough evidence, it refuses the binding and names the missing fact instead of inventing a test. When you know the fact, assert it with --bind and the sandbox stops being a draft.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="List failure scenarios available for an API"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}<span className="ok">✓</span> declines             1 binding{"\n"}<span className="ok">✓</span> timeouts             1 binding{"\n"}<span className="ok">✓</span> retry_storm          1 binding{"\n"}<span className="warn">✗</span> duplicate_delivery{"\n"}    <span className="dim">no webhookEvent matching {"{}"} for role 'emittedEvent'</span></></Terminal>
+            <Terminal label="List failure scenarios available for an API"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}archetypes vs examplepay (4 endpoints):{"\n"}  <span className="ok">✓</span> declines                   Declines  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> timeouts                   Timeouts  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> retry_storm                Retry storm with recovery  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> rate_limit_backoff         Rate limit and backoff  (4 candidate binding(s)){"\n"}  <span className="warn">✗</span> duplicate_delivery         Duplicate delivery{"\n"}      <span className="dim">no webhookEvent matching {"{}"} for role 'emittedEvent'</span></></Terminal>
           </div>
         </div></section>
 
@@ -190,7 +190,7 @@ function Index() {
             <p>The result is an ordinary scenario file: inspect it, commit it, and keep the production failure as a regression test. When the agent runs on another host, one command exports the incident as a bundle that reproduce and fix accept on your laptop, with nothing else copied.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="Reproduce a production incident"><><span className="prompt">$</span> pikopod scenario reproduce fp_14835fa32dfb{"\n"}reproduced examplepay 503 on POST /charges{"\n"}→ scenarios/incident-14835fa32dfb.yaml{"\n"}<span className="ok">PASSED</span> — 1 assertion passed</></Terminal>
+            <Terminal label="Reproduce a production incident"><><span className="prompt">$</span> pikopod scenario reproduce fp_14835fa32dfb{"\n"}reproduced fp_14835fa32dfb (examplepay answered 503 on POST /charges) as pikopod-data/scenarios/incident-14835fa32dfb.yaml{"\n"}<span className="ok">PASSED</span> — 1 assertion(s) passed; 0 not evaluated{"\n"}the failure now happens locally — fix it, then re-run: pikopod scenario run examplepay incident-14835fa32dfb</></Terminal>
             <p className="terminal-caption">Recordings are redacted before they touch disk. Unclassified values are dropped. Each incident says how long it stays reproducible.</p>
           </div>
         </div></section>
@@ -206,7 +206,7 @@ function Index() {
             <article><span className="signal-label"><i className="warn-dot" />Observed</span><h3>The responses you received</h3><p>A fail-open proxy reports incidents immediately and structural drift after a stable baseline exists.</p></article>
           </div>
           <div className="story-wide-proof">
-            <Terminal label="Run an offline regression check"><><span className="prompt">$</span> pikopod replay --ci{"\n"}<span className="ok">PASSED</span> 42 recordings · exact 37 · shape 5{"\n"}{"\n"}<span className="prompt">$</span> pikopod spec-diff origin/main:openapi.yaml openapi.yaml --fail-on ERR --format githubactions{"\n"}<span className="err">ERR</span> GET /charges/{"{id}"} response field `status` removed{"\n"}<span className="err">breaking declared drift — exit 1</span></></Terminal>
+            <Terminal label="Run an offline regression check"><><span className="prompt">$</span> pikopod replay --ci{"\n"}examplepay: 37 recordings gated (1 pre-warmup skipped) — 0 finding(s){"\n"}clean — no drift against frozen baselines{"\n"}{"\n"}<span className="prompt">$</span> pikopod spec-diff origin/main:openapi.yaml openapi.yaml --fail-on ERR{"\n"}1 change(s): 1 ERR, 0 WARN, 0 INFO{"\n"}{"\n"}<span className="err">ERR</span>  GET    /charges/{"{id}"}                            endpoint-removed{"\n"}     endpoint removed from the spec  [fp_bcc85ba9a094]{"\n"}{"\n"}<span className="err">breaking declared drift at/above ERR — failing the gate (exit 1)</span></></Terminal>
             <p className="terminal-caption">Replay runs offline. Exit 0 is clean, 1 means the check found a failure, and 2 means the tool could not run.</p>
           </div>
         </div></section>
