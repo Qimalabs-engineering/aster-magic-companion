@@ -17,6 +17,7 @@ export const Route = createFileRoute("/")({
 });
 
 const github = "https://github.com/pikopod/pikopod";
+const docs = "https://docs.pikopod.com";
 const designPartnerEmail = "mailto:hello@pikopod.com?subject=Design%20partner%20application";
 
 function nodeText(node: ReactNode): string {
@@ -149,7 +150,7 @@ function Index() {
       <header className="site-header">
         <a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a>
         <nav aria-label="Primary navigation">
-          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={github}>GitHub</a>
+          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={docs}>Docs</a><a href={github}>GitHub</a>
           <a className="nav-cta" href="#apply">Apply</a>
         </nav>
       </header>
@@ -280,7 +281,7 @@ function Index() {
         </div></section>
       </main>
 
-      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={`${github}#readme`}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
+      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={docs}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
     </div>
   );
 }
