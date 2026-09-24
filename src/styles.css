@@ -76,6 +76,12 @@
 .nav-cta, .primary-link { border-color: var(--primary); background: var(--primary); color: var(--primary-foreground); }
 .nav-cta:hover, .primary-link:hover { transform: translateY(-2px); background: var(--accent); border-color: var(--accent); }
 .outline-link:hover { border-color: var(--foreground); background: var(--secondary); }
+.github-link { gap: 9px; }
+.star-count { display: inline-flex; align-items: center; gap: 5px; border-left: 1px solid var(--border); padding-left: 10px; color: var(--muted-foreground); font-weight: 400; }
+.star-count svg { color: var(--accent); fill: currentColor; }
+.nav-github { display: inline-flex; align-items: center; gap: 6px; }
+.nav-star { display: inline-flex; align-items: center; gap: 4px; color: var(--subtle); }
+.nav-star svg { fill: currentColor; }
 
 .story-hero { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(380px, .92fr); align-items: center; gap: clamp(44px, 5vw, 68px); padding-block: clamp(72px, 8vw, 104px) 48px; }
 .story-hero-copy { min-width: 0; }

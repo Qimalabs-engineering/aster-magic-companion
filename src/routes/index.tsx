@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck, Star } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,9 +16,49 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const github = "https://github.com/pikopod/pikopod";
+const github = "https://github.com/Pikopod/pikopod";
 const docs = "https://docs.pikopod.com";
 const designPartnerEmail = "mailto:hello@pikopod.com?subject=Design%20partner%20application";
+
+const starsCacheKey = "pikopod-github-stars";
+
+function useGitHubStars(): number | null {
+  const [stars, setStars] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const cached = JSON.parse(localStorage.getItem(starsCacheKey) ?? "null") as { count: number; at: number } | null;
+      if (cached && typeof cached.count === "number" && Date.now() - cached.at < 3_600_000) {
+        setStars(cached.count);
+        return;
+      }
+    } catch {
+      // ignore unreadable cache and refetch
+    }
+    let cancelled = false;
+    fetch("https://api.github.com/repos/Pikopod/pikopod", { headers: { Accept: "application/vnd.github+json" } })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { stargazers_count?: number } | null) => {
+        if (cancelled || !data || typeof data.stargazers_count !== "number") return;
+        setStars(data.stargazers_count);
+        try {
+          localStorage.setItem(starsCacheKey, JSON.stringify({ count: data.stargazers_count, at: Date.now() }));
+        } catch {
+          // storage unavailable; the badge still shows for this visit
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return stars;
+}
+
+function formatStars(count: number): string {
+  return count >= 1000 ? `${(count / 1000).toFixed(count >= 10_000 ? 0 : 1)}k` : String(count);
+}
 
 function nodeText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -145,14 +185,16 @@ function WorkflowLoop() {
 }
 
 function Index() {
+  const stars = useGitHubStars();
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="site-header">
         <a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a>
-        <nav aria-label="Primary navigation">
-          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={docs}>Docs</a><a href={github}>GitHub</a>
-          <a className="nav-cta" href="#apply">Apply</a>
-        </nav>
+          <nav aria-label="Primary navigation">
+            <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={docs}>Docs</a><a className="nav-github" href={github}>GitHub{stars !== null && <span className="nav-star"><Star size={11} aria-hidden="true" />{formatStars(stars)}</span>}</a>
+            <a className="nav-cta" href="#apply">Apply</a>
+          </nav>
       </header>
 
       <main id="top">
@@ -161,7 +203,7 @@ function Index() {
             <p className="chapter-label"><span className="status-dot" />Open source · accepting design partners</p>
             <h1>Rehearse API failures before you ship, and replay the ones production already hit.</h1>
             <p>pikopod fails your build when a provider’s spec changes shape, builds a deterministic sandbox from that spec or from their docs page, rehearses the failures their sandbox never produces, and replays the ones production still finds.</p>
-            <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link" href={github}>View on GitHub</a></div>
+            <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link github-link" href={github}>View on GitHub{stars !== null && <span className="star-count" aria-label={`${stars} stars on GitHub`}><Star size={13} aria-hidden="true" />{formatStars(stars)}</span>}</a></div>
           </div>
           <div className="story-hero-proof">
             <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         declined         POST /charges → 400{"\n"}    <span className="ok">PASSED</span>         recovered        POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         attempt1         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt2         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt3         POST /charges → 201</></Terminal>
