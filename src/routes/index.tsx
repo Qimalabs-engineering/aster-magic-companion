@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck, Star } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,9 +16,49 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const github = "https://github.com/pikopod/pikopod";
+const github = "https://github.com/Pikopod/pikopod";
 const docs = "https://docs.pikopod.com";
 const designPartnerEmail = "mailto:hello@pikopod.com?subject=Design%20partner%20application";
+
+const starsCacheKey = "pikopod-github-stars";
+
+function useGitHubStars(): number | null {
+  const [stars, setStars] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const cached = JSON.parse(localStorage.getItem(starsCacheKey) ?? "null") as { count: number; at: number } | null;
+      if (cached && typeof cached.count === "number" && Date.now() - cached.at < 3_600_000) {
+        setStars(cached.count);
+        return;
+      }
+    } catch {
+      // ignore unreadable cache and refetch
+    }
+    let cancelled = false;
+    fetch("https://api.github.com/repos/Pikopod/pikopod", { headers: { Accept: "application/vnd.github+json" } })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { stargazers_count?: number } | null) => {
+        if (cancelled || !data || typeof data.stargazers_count !== "number") return;
+        setStars(data.stargazers_count);
+        try {
+          localStorage.setItem(starsCacheKey, JSON.stringify({ count: data.stargazers_count, at: Date.now() }));
+        } catch {
+          // storage unavailable; the badge still shows for this visit
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return stars;
+}
+
+function formatStars(count: number): string {
+  return count >= 1000 ? `${(count / 1000).toFixed(count >= 10_000 ? 0 : 1)}k` : String(count);
+}
 
 function nodeText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
