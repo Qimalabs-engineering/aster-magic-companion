@@ -185,14 +185,16 @@ function WorkflowLoop() {
 }
 
 function Index() {
+  const stars = useGitHubStars();
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       <header className="site-header">
         <a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a>
-        <nav aria-label="Primary navigation">
-          <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={docs}>Docs</a><a href={github}>GitHub</a>
-          <a className="nav-cta" href="#apply">Apply</a>
-        </nav>
+          <nav aria-label="Primary navigation">
+            <a href="#demo">Demo</a><a href="#sandbox">Sandbox</a><a href="#reproduce">Reproduce</a><a href="#observe">CI</a><a href={docs}>Docs</a><a className="nav-github" href={github}>GitHub{stars !== null && <span className="nav-star"><Star size={11} aria-hidden="true" />{formatStars(stars)}</span>}</a>
+            <a className="nav-cta" href="#apply">Apply</a>
+          </nav>
       </header>
 
       <main id="top">
@@ -201,7 +203,7 @@ function Index() {
             <p className="chapter-label"><span className="status-dot" />Open source · accepting design partners</p>
             <h1>Rehearse API failures before you ship, and replay the ones production already hit.</h1>
             <p>pikopod fails your build when a provider’s spec changes shape, builds a deterministic sandbox from that spec or from their docs page, rehearses the failures their sandbox never produces, and replays the ones production still finds.</p>
-            <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link" href={github}>View on GitHub</a></div>
+            <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link github-link" href={github}>View on GitHub{stars !== null && <span className="star-count" aria-label={`${stars} stars on GitHub`}><Star size={13} aria-hidden="true" />{formatStars(stars)}</span>}</a></div>
           </div>
           <div className="story-hero-proof">
             <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         declined         POST /charges → 400{"\n"}    <span className="ok">PASSED</span>         recovered        POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         attempt1         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt2         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt3         POST /charges → 201</></Terminal>
