@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck, Star } from "lucide-react";
+import { ArrowUpRight, Check, Copy, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck, Star } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -184,6 +184,24 @@ function WorkflowLoop() {
   );
 }
 
+const installCommand = "go install github.com/pikopod/pikopod/cmd/pikopod@latest";
+
+function InstallLine() {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard?.writeText(installCommand).then(() => {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    }).catch(() => {});
+  };
+  return (
+    <div className="install-line">
+      <code><span className="prompt">$</span> {installCommand}</code>
+      <button type="button" onClick={copy} aria-label={copied ? "Copied" : "Copy install command"}>{copied ? <Check size={15} aria-hidden="true" /> : <Copy size={15} aria-hidden="true" />}</button>
+    </div>
+  );
+}
+
 function Index() {
   const stars = useGitHubStars();
 
@@ -202,11 +220,13 @@ function Index() {
           <div className="story-hero-copy">
             <p className="chapter-label"><span className="status-dot" />Open source · accepting design partners</p>
             <h1>Rehearse API failures before you ship, and replay the ones production already hit.</h1>
-            <p>pikopod fails your build when a provider’s spec changes shape, builds a deterministic sandbox from that spec or from their docs page, rehearses the failures their sandbox never produces, and replays the ones production still finds.</p>
-            <div className="actions"><a className="button-link primary-link" href="#sandbox">See the workflow</a><a className="button-link outline-link github-link" href={github}>View on GitHub{stars !== null && <span className="star-count" aria-label={`${stars} stars on GitHub`}><Star size={13} aria-hidden="true" />{formatStars(stars)}</span>}</a></div>
+            <p>pikopod is a sandbox for the third-party APIs you depend on. Built from the provider’s spec, it fails on purpose. When production fails anyway, it replays that exact failure into the same sandbox so you fix it on a laptop and keep the fix as a test.</p>
+            <InstallLine />
+            <div className="actions"><a className="button-link primary-link" href={docs}>Read the docs</a><a className="button-link outline-link github-link" href={github}>View on GitHub{stars !== null && <span className="star-count" aria-label={`${stars} stars on GitHub`}><Star size={13} aria-hidden="true" />{formatStars(stars)}</span>}</a></div>
           </div>
           <div className="story-hero-proof">
-            <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         declined         POST /charges → 400{"\n"}    <span className="ok">PASSED</span>         recovered        POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         attempt1         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt2         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt3         POST /charges → 201</></Terminal>
+            <Terminal label="Failure scenarios bound to an imported API"><><span className="prompt">$</span> pikopod scenario list examplepay{"\n"}archetypes vs examplepay (4 endpoints):{"\n"}  <span className="ok">✓</span> declines                   Declines  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> timeouts                   Timeouts  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> retry_storm                Retry storm with recovery  (1 candidate binding(s)){"\n"}  <span className="ok">✓</span> rate_limit_backoff         Rate limit and backoff  (4 candidate binding(s)){"\n"}  <span className="ok">✓</span> partial_failure            Partial failure  (1 candidate binding(s)){"\n"}  <span className="warn">✗</span> duplicate_delivery         Duplicate delivery{"\n"}      <span className="dim">no webhookEvent matching {"{}"} for role 'emittedEvent'</span></></Terminal>
+            <p className="terminal-caption">Ten stories bound to four endpoints with nothing authored. The one that did not says which fact the spec is missing.</p>
           </div>
           <div className="story-facts" aria-label="Product characteristics"><span>One Go binary</span><span>Runs locally</span><span>No accounts, no telemetry</span><span>Nothing leaves unless you configure it</span></div>
         </section>
@@ -218,10 +238,11 @@ function Index() {
             <p>Import a spec, arm a failure, rehearse it, catch the one production still found, and keep it as an offline regression test.</p>
           </div>
           <figure className="demo-figure">
-            <video poster="/pikopod-demo-poster.jpg" controls playsInline preload="metadata" aria-label="pikopod demo: the full loop from spec import to offline regression">
+            <video poster="/pikopod-demo-poster.jpg" controls playsInline muted preload="metadata" aria-label="pikopod demo: the full loop from spec import to offline regression">
               <source src="/pikopod-demo.mp4" type="video/mp4" />
-              Your browser does not support HTML video.
+              <img src="https://raw.githubusercontent.com/Pikopod/pikopod/main/docs/demo/demo.gif" alt="pikopod demo: the full loop from spec import to offline regression" />
             </video>
+            <figcaption>Command output with narration. 45 seconds.</figcaption>
           </figure>
         </div></section>
 
@@ -233,7 +254,7 @@ function Index() {
             <p>Then arm the failure you need. Timeouts, rate limits, malformed responses, connection resets and duplicate webhooks are controlled inputs. Put the sandbox into a scenario’s standing state and your own tests, Postman or a teammate’s browser meet that failure until you clear it. Here timeouts means the sandbox holds every GET /charges. Webhooks arrive wrapped and signed the way the provider sends them, and only for events the docs declare.</p>
           </div>
           <div className="story-proof">
-            <Terminal label="Import a provider specification and set a standing failure state"><><span className="prompt">$</span> pikopod import examplepay --spec https://docs.examplepay.test{"\n"}sandbox examplepay registered (sbx_41d959476a09e5f9, 4 endpoints){"\n"}serve it with `pikopod up` → http://127.0.0.1:4600/examplepay/...{"\n"}{"\n"}<span className="prompt">$</span> pikopod mode set examplepay timeouts{"\n"}mode: timeouts (from archetype or pack timeouts){"\n"}  armed   latency on GET /charges{"\n"}point your app at the sandbox and run your own tests; clear it with `pikopod mode clear examplepay`</></Terminal>
+            <Terminal label="Example pikopod scenario run"><><span className="prompt">$</span> pikopod scenario run examplepay declines retry_storm{"\n"}<span className="ok">✓</span> declines — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         declined         POST /charges → 400{"\n"}    <span className="ok">PASSED</span>         recovered        POST /charges → 201{"\n"}<span className="ok">✓</span> retry_storm — PASSED (4 assertion(s) passed; 0 not evaluated){"\n"}    <span className="ok">PASSED</span>         attempt1         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt2         POST /charges → 503{"\n"}    <span className="ok">PASSED</span>         attempt3         POST /charges → 201</></Terminal>
             <p className="terminal-caption">No proxy, account or authored mock is required to start.</p>
           </div>
         </div></section>
@@ -310,7 +331,7 @@ function Index() {
         </div></section>
 
         <section className="partner-section" id="apply"><div className="shell partner-grid">
-          <div className="partner-copy"><span className="chapter-label">Design partners · Q4 2026</span><h2>Run pikopod against a provider you depend on</h2><p>pikopod is open source and works today. We are looking for a small number of teams willing to use it against a real production dependency while the hosted layer is built.</p>
+          <div className="partner-copy"><span className="chapter-label">Design partners · Q4 2026</span><h2>Run pikopod against a provider you depend on</h2><p>pikopod is open source and works today. We are looking for a small number of teams willing to use it against a real production dependency while the hosted layer is built. The binary, the sandbox, the CI gate, the agent and every file format stay Apache-2.0. The hosted layer is shared incident storage and team views for several agents.</p>
             <div className="terms"><div><h3>What you get</h3><p>A direct line to the maintainer, influence over provider support, and free hosted access during the program.</p></div><div><h3>What we ask</h3><p>Use it with one real provider, join a short call every two weeks, and tell us when it is wrong.</p></div></div>
           </div>
           <div className="partner-cta">
@@ -323,7 +344,7 @@ function Index() {
         </div></section>
       </main>
 
-      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={docs}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
+      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={docs}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a><a href="https://github.com/pikopod/pikopod/blob/main/CHANGELOG.md">Changelog</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
     </div>
   );
 }
