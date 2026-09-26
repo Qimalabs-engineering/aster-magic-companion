@@ -234,11 +234,11 @@ function Index() {
         <section className="story-section story-section-alt" id="demo"><div className="shell demo-layout">
           <div className="story-intro">
             <span className="chapter-label">Demo</span>
-            <h2>The whole loop in just over a minute</h2>
+            <h2>The whole loop, clearly explained</h2>
             <p>Import a spec, arm a failure, rehearse it, catch the one production still found, and keep it as an offline regression test.</p>
           </div>
           <figure className="demo-figure">
-            <video poster="/pikopod-demo-poster.jpg" controls playsInline muted preload="metadata" aria-label="pikopod demo: the full loop from spec import to offline regression">
+            <video poster="/pikopod-demo-poster.jpg" controls playsInline preload="metadata" aria-label="pikopod demo: the full loop from spec import to offline regression">
               <source src="/pikopod-demo.mp4" type="video/mp4" />
               <img src="https://raw.githubusercontent.com/Pikopod/pikopod/main/docs/demo/demo.gif" alt="pikopod demo: the full loop from spec import to offline regression" />
             </video>
