@@ -2,22 +2,24 @@
 
 > pikopod is an open-source sandbox for the third-party APIs you depend on. Built from the provider's spec, it fails on purpose: rehearsal scenarios run against a deterministic sandbox before you ship, and when production fails anyway, the incident replays into the same sandbox so you fix it on a laptop and keep the fix as a test.
 
-pikopod is a command-line tool written in Go. It builds an offline sandbox from a provider's OpenAPI spec or docs URL, wraps webhooks, and runs failure-rehearsal scenarios (declines, timeouts, retry storms, rate limits, duplicate deliveries) that a real provider never lets you practice on. `pikopod spec-diff --fail-on` gates CI when a provider's spec drifts, and `pikopod replay` turns a captured production incident into a passing regression test. Licensed under Apache-2.0.
+pikopod is a command-line tool written in Go. It builds an offline sandbox from a provider's OpenAPI spec or docs URL, wraps webhooks, and runs failure-rehearsal scenarios (declines, timeouts, retry storms, duplicate deliveries) that a real provider never lets you practice on. `pikopod spec-diff --fail-on` gates CI when a provider's spec drifts, and `pikopod agent replay --ci` turns a captured production incident into a regression gate on every build. Licensed under Apache-2.0.
 
 ## Docs
 
-- [README](https://github.com/Pikopod/pikopod/blob/main/README.md): full feature overview, quickstart, and CLI reference.
-- [Installation](https://github.com/Pikopod/pikopod#quickstart): `go install github.com/Pikopod/pikopod@latest` and the basic import / up / run loop.
-- [Scenario guide](https://github.com/Pikopod/pikopod#scenarios): writing failure-rehearsal scenarios, standing state, and binding to real endpoints.
-- [CI integration](https://github.com/Pikopod/pikopod#ci): gating with `spec-diff --fail-on`, exit codes, and the `--ci` replay flag.
-- [Changelog](https://github.com/Pikopod/pikopod/blob/main/CHANGELOG.md): releases and notable changes.
+- [Install](https://github.com/pikopod/pikopod#install): `go install github.com/pikopod/pikopod/cmd/pikopod@latest` and the try-it-in-ten-seconds quickstart.
+- [Sandbox overview](https://docs.pikopod.com/sandbox/overview): the deterministic sandbox built from the provider's spec.
+- [Scenarios overview](https://docs.pikopod.com/scenarios/overview): writing failure-rehearsal scenarios, standing state, and binding to real endpoints.
+- [Spec diff](https://docs.pikopod.com/gate/spec-diff): gating CI when a provider's spec drifts.
+- [Reproduce](https://docs.pikopod.com/reproduce/reproduce): turning a production incident fingerprint into a committed scenario.
+- [Drift](https://docs.pikopod.com/observe/drift) and [Replay gate](https://docs.pikopod.com/observe/replay-gate): replaying recorded production traffic against every build.
 
 ## Project
 
-- [Source repository](https://github.com/Pikopod/pikopod): Apache-2.0 licensed, issues and contributions welcome.
-- [Releases](https://github.com/Pikopod/pikopod/releases): binary releases and version history.
-- [Security policy](https://github.com/Pikopod/pikopod/security/policy): how to report vulnerabilities.
-- [Contributing](https://github.com/Pikopod/pikopod/blob/main/CONTRIBUTING.md): contribution guidelines.
+- [Source repository](https://github.com/pikopod/pikopod): Apache-2.0 licensed, issues and contributions welcome.
+- [README](https://github.com/pikopod/pikopod/blob/main/README.md): full feature overview and quickstart.
+- [Releases](https://github.com/pikopod/pikopod/releases): binary releases and version history.
+- [Security policy](https://github.com/pikopod/pikopod/security/policy): how to report vulnerabilities.
+- [Contributing](https://github.com/pikopod/pikopod/blob/main/CONTRIBUTING.md): contribution guidelines.
 
 ## Optional
 
