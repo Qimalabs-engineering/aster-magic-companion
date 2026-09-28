@@ -344,7 +344,7 @@ function Index() {
         </div></section>
       </main>
 
-      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={docs}>Docs</a><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a><a href="https://github.com/pikopod/pikopod/blob/main/CHANGELOG.md">Changelog</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
+      <footer><div className="shell footer-grid"><div><a className="wordmark" href="#top"><img src="/favicon.svg" alt="" />pikopod</a><p>Open source under Apache-2.0.</p></div><div><h3>Product</h3><a href={docs}>Docs</a><Link to="/strategies/api-testing">API testing strategies</Link><a href={github}>GitHub</a><a href={`${github}/releases`}>Releases</a><a href="https://github.com/pikopod/pikopod/blob/main/CHANGELOG.md">Changelog</a></div><div><h3>Project</h3><a href={`${github}/blob/main/CONTRIBUTING.md`}>Contributing</a><a href={`${github}/security/policy`}>Security policy</a></div></div></footer>
     </div>
   );
 }

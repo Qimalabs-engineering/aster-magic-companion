@@ -198,3 +198,26 @@ footer { border-top: 1px solid var(--border); padding-block: 64px; }
 .install-line .prompt { color: var(--accent); }
 .install-line button { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; flex: none; border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--muted-foreground); cursor: pointer; }
 .install-line button:hover { color: var(--foreground); border-color: var(--foreground); }
+
+/* Guide pages */
+.guide-page { max-width: 860px; padding: 72px 0 96px; }
+.guide-header { margin-bottom: 56px; }
+.guide-header .kicker { color: var(--accent); font-family: var(--font-mono); font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin: 0 0 14px; }
+.guide-header h1 { font-size: clamp(1.9rem, 3.4vw, 2.6rem); line-height: 1.18; margin: 0 0 18px; max-width: 720px; }
+.guide-lede { color: var(--muted-foreground); font-size: 1.05rem; line-height: 1.65; margin: 0; max-width: 680px; }
+.guide-section { margin-top: 56px; }
+.guide-section h2 { font-size: clamp(1.35rem, 2.1vw, 1.7rem); line-height: 1.25; margin: 0 0 16px; }
+.guide-section p { color: var(--muted-foreground); line-height: 1.7; margin: 0 0 16px; }
+.guide-section .terminal { margin: 20px 0; }
+.guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+.guide-card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); padding: 20px 22px; }
+.guide-card h3 { font-size: .98rem; margin: 0 0 8px; }
+.guide-card p { color: var(--muted-foreground); font-size: .9rem; line-height: 1.6; margin: 0; }
+.guide-list { color: var(--muted-foreground); line-height: 1.7; margin: 0; padding-left: 22px; }
+.guide-list li { margin-bottom: 12px; }
+.guide-list strong { color: var(--foreground); }
+.guide-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+@media (max-width: 720px) {
+  .guide-page { padding: 48px 0 72px; }
+  .guide-grid { grid-template-columns: 1fr; }
+}
