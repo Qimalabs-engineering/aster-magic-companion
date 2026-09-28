@@ -3,6 +3,7 @@ import { Children, cloneElement, isValidElement, ReactNode, useEffect, useRef, u
 import { ArrowUpRight, Check, Copy, CheckCircle2, GitCompareArrows, Import, Mail, Play, Radio, RefreshCw, RotateCcw, ShieldCheck, Star } from "lucide-react";
 
 export const Route = createFileRoute("/")({
+  staticData: { sitemap: true },
   head: () => ({
     meta: [
       { title: "pikopod — rehearse the failures, reproduce the ones you missed" },
